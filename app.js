@@ -51,7 +51,11 @@ const elements = {
   fitButton: document.getElementById('fitButton'),
   togglePoints: document.getElementById('togglePoints'),
   toggleDistricts: document.getElementById('toggleDistricts'),
-  districtTableBody: document.getElementById('districtTableBody')
+  districtTableBody: document.getElementById('districtTableBody'),
+  filterPanel: document.getElementById('filterPanel'),
+  filterToggleButton: document.getElementById('filterToggleButton'),
+  closeFilterButton: document.getElementById('closeFilterButton'),
+  applyFilterButton: document.getElementById('applyFilterButton')
 };
 
 function formatNumber(value, maximumFractionDigits = 0) {
@@ -186,6 +190,43 @@ function setupFilterInputs() {
   }
 }
 
+function isMobileLayout() {
+  return window.matchMedia('(max-width: 820px)').matches;
+}
+
+function setFilterPanelOpen(isOpen, options = {}) {
+  if (!elements.filterPanel) return;
+
+  if (!isMobileLayout()) {
+    elements.filterPanel.hidden = false;
+    elements.filterToggleButton?.setAttribute('aria-expanded', 'true');
+    return;
+  }
+
+  elements.filterPanel.hidden = !isOpen;
+  elements.filterToggleButton?.setAttribute('aria-expanded', String(isOpen));
+  elements.filterToggleButton?.classList.toggle('is-active', isOpen);
+
+  if (isOpen && options.scroll !== false) {
+    window.requestAnimationFrame(() => {
+      elements.filterPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  if (!isOpen && options.scrollTarget) {
+    const target = document.querySelector(options.scrollTarget);
+    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function syncFilterPanelWithViewport() {
+  if (isMobileLayout()) {
+    setFilterPanelOpen(false, { scroll: false });
+  } else {
+    setFilterPanelOpen(true, { scroll: false });
+  }
+}
+
 function bindEvents() {
   const filterControls = [
     elements.startDate,
@@ -200,6 +241,20 @@ function bindEvents() {
   });
 
   elements.resetButton.addEventListener('click', resetFilters);
+
+  elements.filterToggleButton?.addEventListener('click', () => {
+    setFilterPanelOpen(elements.filterPanel?.hidden ?? true);
+  });
+
+  elements.closeFilterButton?.addEventListener('click', () => {
+    setFilterPanelOpen(false, { scrollTarget: '.map-card' });
+  });
+
+  elements.applyFilterButton?.addEventListener('click', () => {
+    setFilterPanelOpen(false, { scrollTarget: '.analysis-grid' });
+  });
+
+  window.addEventListener('resize', syncFilterPanelWithViewport);
 
   elements.fitButton.addEventListener('click', () => {
     if (state.provinceBounds) state.map.fitBounds(state.provinceBounds, { padding: [20, 20] });
@@ -688,6 +743,7 @@ async function initialize() {
     setupFilterInputs();
     buildCharts();
     bindEvents();
+    syncFilterPanelWithViewport();
     applyFilters();
 
     state.map.fitBounds(state.provinceBounds, { padding: [20, 20] });
