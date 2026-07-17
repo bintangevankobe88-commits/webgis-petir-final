@@ -1,0 +1,8 @@
+{
+  "judul": "WebGIS Monitoring Aktivitas Sambaran Petir Jawa Timur",
+  "periode_mulai": "2026-06-01",
+  "periode_selesai": "2026-06-26",
+  "jumlah_data": 419,
+  "sumber": "Lightning Detector Stasiun Geofisika Pasuruan – BMKG",
+  "catatan": "Prototype project magang. Peta menampilkan sambaran yang terdeteksi pada periode pengamatan dan bukan prediksi lokasi sambaran berikutnya."
+}

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#071423" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="WebGIS monitoring aktivitas sambaran petir Cloud-to-Ground di Jawa Timur." />
+  <title>WebGIS Petir Jawa Timur</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css?v=mobile-final-20260717-2" />
+</head>
+<body>
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loader"></div>
+    <p>Memuat data spasial...</p>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">⚡</div>
+      <div class="brand-copy">
+        <p class="eyebrow">PROTOTYPE • INTERNSHIP GIS PROJECT</p>
+        <h1>Monitoring Sambaran Petir Jawa Timur</h1>
+        <p id="periodLabel" class="subtitle">Memuat periode data...</p>
+      </div>
+    </div>
+    <div class="header-badge">
+      <span>Stasiun Geofisika Pasuruan</span>
+      <strong>BMKG</strong>
+    </div>
+  </header>
+
+  <main>
+    <section class="stats-grid" aria-label="Ringkasan statistik">
+      <article class="stat-card"><span class="stat-icon">⚡</span><div><p>Total Sambaran</p><strong id="totalStrikes">–</strong><small>sesuai filter aktif</small></div></article>
+      <article class="stat-card"><span class="stat-icon">🕒</span><div><p>Periode Dominan</p><strong id="dominantPeriod">–</strong><small id="dominantPeriodDetail">–</small></div></article>
+      <article class="stat-card"><span class="stat-icon">📍</span><div><p>Wilayah Terbanyak</p><strong id="topDistrict">–</strong><small id="topDistrictDetail">–</small></div></article>
+      <article class="stat-card"><span class="stat-icon">〽</span><div><p>Rata-rata Arus</p><strong id="averageCurrent">–</strong><small>nilai absolut dalam kA</small></div></article>
+    </section>
+
+    <section class="workspace">
+      <aside id="filterPanel" class="control-panel" aria-label="Filter dan pengaturan layer">
+        <div class="panel-heading">
+          <div><p class="eyebrow">FILTER DATA</p><h2>Atur tampilan peta</h2></div>
+          <button id="resetButton" class="button button-ghost" type="button">Reset</button>
+        </div>
+
+        <div class="date-range-grid" aria-label="Rentang tanggal">
+          <div class="filter-group date-field">
+            <label for="startDate">Tanggal mulai</label>
+            <div class="date-picker">
+              <div class="date-visible"><span id="startDateDisplay">–</span><span class="calendar-icon" aria-hidden="true">▦</span></div>
+              <input id="startDate" type="date" aria-label="Tanggal mulai" />
+            </div>
+          </div>
+          <div class="filter-group date-field">
+            <label for="endDate">Tanggal selesai</label>
+            <div class="date-picker">
+              <div class="date-visible"><span id="endDateDisplay">–</span><span class="calendar-icon" aria-hidden="true">▦</span></div>
+              <input id="endDate" type="date" aria-label="Tanggal selesai" />
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label for="districtFilter">Kabupaten/Kota</label>
+          <select id="districtFilter"><option value="ALL">Semua wilayah</option></select>
+        </div>
+
+        <fieldset class="filter-group option-grid period-options">
+          <legend>Periode waktu</legend>
+          <label class="option-card"><input type="checkbox" class="period-filter" value="Dini Hari" checked /><span class="legend-dot dini"></span><span><b>Dini Hari</b><small>00.00–05.59</small></span></label>
+          <label class="option-card"><input type="checkbox" class="period-filter" value="Pagi" checked /><span class="legend-dot pagi"></span><span><b>Pagi</b><small>06.00–11.59</small></span></label>
+          <label class="option-card"><input type="checkbox" class="period-filter" value="Siang-Sore" checked /><span class="legend-dot siang"></span><span><b>Siang–Sore</b><small>12.00–17.59</small></span></label>
+          <label class="option-card"><input type="checkbox" class="period-filter" value="Malam" checked /><span class="legend-dot malam"></span><span><b>Malam</b><small>18.00–23.59</small></span></label>
+        </fieldset>
+
+        <fieldset class="filter-group option-grid compact-options">
+          <legend>Polaritas</legend>
+          <label class="option-card"><input type="checkbox" class="polarity-filter" value="(-)" checked /><span><b>Negatif (−)</b></span></label>
+          <label class="option-card"><input type="checkbox" class="polarity-filter" value="(+)" checked /><span><b>Positif (+)</b></span></label>
+        </fieldset>
+
+        <fieldset class="filter-group option-grid compact-options">
+          <legend>Layer</legend>
+          <label class="option-card"><input id="togglePoints" type="checkbox" checked /><span><b>Titik sambaran</b></span></label>
+          <label class="option-card"><input id="toggleDistricts" type="checkbox" checked /><span><b>Tematik wilayah</b></span></label>
+        </fieldset>
+
+        <div class="info-box"><strong>Petunjuk</strong><p>Klik titik atau wilayah pada peta untuk melihat rincian.</p></div>
+        <button id="closeFilterButton" class="button close-filter-button" type="button">Selesai mengatur filter</button>
+      </aside>
+
+      <section class="map-card">
+        <div class="map-toolbar">
+          <div><p class="eyebrow">WEB MAP</p><h2>Distribusi Spasial dan Temporal Sambaran Petir</h2></div>
+          <div class="map-actions">
+            <button id="mobileFilterToggle" class="button button-ghost mobile-filter-button" type="button" aria-expanded="false" aria-controls="filterPanel"><span aria-hidden="true">☰</span> Filter &amp; Layer</button>
+            <button id="fitButton" class="button" type="button">Seluruh Jawa Timur</button>
+          </div>
+        </div>
+
+        <div id="map" role="application" aria-label="Peta interaktif sambaran petir Jawa Timur"></div>
+
+        <div class="map-meta" aria-label="Legenda dan sumber peta">
+          <div class="legend-block">
+            <span class="legend-title">Waktu:</span>
+            <span class="legend-item"><i class="dini"></i>Dini hari</span>
+            <span class="legend-item"><i class="pagi"></i>Pagi</span>
+            <span class="legend-item"><i class="siang"></i>Siang–sore</span>
+            <span class="legend-item"><i class="malam"></i>Malam</span>
+          </div>
+          <div class="legend-block thematic-legend">
+            <span class="legend-title">Jumlah wilayah:</span>
+            <span class="legend-item"><i style="background:#172f48"></i>0</span>
+            <span class="legend-item"><i style="background:#245274"></i>1–5</span>
+            <span class="legend-item"><i style="background:#287fa1"></i>6–10</span>
+            <span class="legend-item"><i style="background:#21b6c7"></i>11–20</span>
+            <span class="legend-item"><i style="background:#ffd166"></i>&gt;20</span>
+          </div>
+          <p class="basemap-source">Peta dasar: © OpenStreetMap contributors.</p>
+        </div>
+
+        <div class="map-note"><span class="note-dot"></span><span>Peta menunjukkan sambaran yang terdeteksi pada periode pengamatan, bukan prediksi lokasi sambaran berikutnya.</span></div>
+      </section>
+    </section>
+
+    <section class="analysis-grid">
+      <article class="chart-card"><div class="card-title"><div><p class="eyebrow">ANALISIS TEMPORAL</p><h2>Jumlah sambaran berdasarkan waktu</h2></div></div><div class="chart-wrapper"><canvas id="periodChart"></canvas></div></article>
+      <article class="chart-card"><div class="card-title"><div><p class="eyebrow">POLARITAS</p><h2>Komposisi sambaran positif dan negatif</h2></div></div><div class="chart-wrapper"><canvas id="polarityChart"></canvas></div></article>
+    </section>
+
+    <section class="table-card">
+      <div class="card-title"><div><p class="eyebrow">RINGKASAN WILAYAH</p><h2>10 kabupaten/kota dengan sambaran terbanyak</h2></div><span id="tableStatus" class="status-chip">Sesuai filter aktif</span></div>
+      <p class="mobile-table-hint">Tampilan HP memprioritaskan peringkat, wilayah, dan total sambaran.</p>
+      <div class="table-scroll"><table><thead><tr><th>Peringkat</th><th>Kabupaten/Kota</th><th>Dini Hari</th><th>Pagi</th><th>Siang–Sore</th><th>Malam</th><th>Total</th></tr></thead><tbody id="districtTableBody"></tbody></table></div>
+    </section>
+  </main>
+
+  <footer><p><strong>Sumber:</strong> Lightning Detector Stasiun Geofisika Pasuruan – BMKG.</p><p>Prototype project magang; perlu validasi internal sebelum menjadi produk resmi.</p></footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+  <script src="app.js?v=mobile-final-20260717-2"></script>
+</body>
+</html>
