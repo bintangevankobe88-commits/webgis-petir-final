@@ -800,3 +800,85 @@ footer p {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   MULTI-PILIH KABUPATEN/KOTA
+   Hanya mengubah kontrol pemilihan wilayah.
+   ========================================================= */
+
+.district-filter-label {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: #d8e5f2;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.district-multi-select {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #081727;
+}
+
+.district-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 42px;
+  padding: 0.58rem 0.75rem;
+  color: #dce8f4;
+  border-bottom: 1px solid rgba(146, 180, 214, 0.10);
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.district-option:last-child {
+  border-bottom: 0;
+}
+
+.district-option:hover {
+  background: rgba(32, 199, 255, 0.06);
+}
+
+.district-option input {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.district-option-all {
+  color: var(--text);
+  background: rgba(32, 199, 255, 0.06);
+  font-weight: 800;
+}
+
+.district-options {
+  max-height: 210px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(32, 199, 255, 0.45) transparent;
+}
+
+.district-options::-webkit-scrollbar {
+  width: 7px;
+}
+
+.district-options::-webkit-scrollbar-thumb {
+  border-radius: 99px;
+  background: rgba(32, 199, 255, 0.38);
+}
+
+.district-selection-summary {
+  display: block;
+  padding: 0.6rem 0.75rem;
+  color: var(--accent);
+  border-top: 1px solid rgba(146, 180, 214, 0.12);
+  background: rgba(32, 199, 255, 0.035);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
