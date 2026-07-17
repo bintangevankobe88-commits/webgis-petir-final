@@ -50,7 +50,9 @@ const elements = {
   startDate: document.getElementById('startDate'),
   endDate: document.getElementById('endDate'),
   districtFilter: document.getElementById('districtFilter'),
+  districtSearch: document.getElementById('districtSearch'),
   districtOptions: document.getElementById('districtOptions'),
+  districtSearchEmpty: document.getElementById('districtSearchEmpty'),
   districtAll: document.getElementById('districtAll'),
   districtSelectionSummary: document.getElementById('districtSelectionSummary'),
   resetButton: document.getElementById('resetButton'),
@@ -249,6 +251,8 @@ function bindEvents() {
     control.addEventListener('change', applyFilters);
   });
 
+  elements.districtSearch?.addEventListener('input', filterDistrictOptions);
+
   elements.districtFilter?.addEventListener('change', event => {
     const changedInput = event.target.closest('.district-filter');
     if (!changedInput) return;
@@ -401,6 +405,42 @@ function updateDistrictSelectionSummary() {
 
   elements.districtSelectionSummary.textContent =
     `${selectedDistricts.length} wilayah dipilih`;
+}
+
+function filterDistrictOptions() {
+  if (!elements.districtSearch || !elements.districtOptions) return;
+
+  const keyword = elements.districtSearch.value
+    .trim()
+    .toLocaleLowerCase('id-ID');
+
+  const districtRows = [
+    ...elements.districtOptions.querySelectorAll('.district-option')
+  ];
+
+  let visibleCount = 0;
+
+  districtRows.forEach(row => {
+    const districtName = row.textContent
+      .trim()
+      .toLocaleLowerCase('id-ID');
+
+    const isMatch =
+      keyword === '' ||
+      districtName.includes(keyword);
+
+    row.hidden = !isMatch;
+
+    if (isMatch) {
+      visibleCount += 1;
+    }
+  });
+
+  if (elements.districtSearchEmpty) {
+    elements.districtSearchEmpty.hidden = visibleCount !== 0;
+  }
+
+  elements.districtOptions.scrollTop = 0;
 }
 
 function applyFilters() {
@@ -857,6 +897,11 @@ function resetFilters() {
     });
 
   updateDistrictSelectionSummary();
+
+  if (elements.districtSearch) {
+    elements.districtSearch.value = '';
+    filterDistrictOptions();
+  }
 
   document.querySelectorAll('.period-filter, .polarity-filter')
     .forEach(input => { input.checked = true; });
