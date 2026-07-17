@@ -1,0 +1,18 @@
+UPDATE KHUSUS TANGGAL + FILTER MOBILE
+
+Yang diubah hanya:
+- Tanggal mulai dan selesai dibuat sejajar pada HP.
+- Panel Filter Data disembunyikan saat halaman HP pertama dibuka.
+- Tombol Atur Filter ditambahkan di atas peta.
+- Setelah filter ditutup, bagian Analisis Temporal langsung berada setelah peta.
+- Tampilan, data, peta, grafik, warna, dan fitur lain tidak diubah.
+
+CARA UPDATE REPOSITORY GITHUB
+1. Ekstrak file UPDATE_FILTER_TANGGAL_3_FILE.zip.
+2. Buka repository GitHub webgis-petir-final.
+3. Klik Add file → Upload files.
+4. Upload index.html, style.css, dan app.js.
+5. Pilih Replace jika diminta.
+6. Commit message: Compact mobile dates and collapse filter panel
+7. Tunggu GitHub Pages deploy ulang.
+8. Buka lewat Safari Private/Incognito untuk memastikan cache lama tidak terbaca.
