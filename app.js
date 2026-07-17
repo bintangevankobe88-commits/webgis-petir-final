@@ -51,12 +51,7 @@ const elements = {
   fitButton: document.getElementById('fitButton'),
   togglePoints: document.getElementById('togglePoints'),
   toggleDistricts: document.getElementById('toggleDistricts'),
-  districtTableBody: document.getElementById('districtTableBody'),
-  mobileFilterToggle: document.getElementById('mobileFilterToggle'),
-  filterPanel: document.getElementById('filterPanel'),
-  closeFilterButton: document.getElementById('closeFilterButton'),
-  startDateDisplay: document.getElementById('startDateDisplay'),
-  endDateDisplay: document.getElementById('endDateDisplay')
+  districtTableBody: document.getElementById('districtTableBody')
 };
 
 function formatNumber(value, maximumFractionDigits = 0) {
@@ -100,32 +95,67 @@ async function fetchJSON(path) {
 function initializeMap() {
   state.map = L.map('map', {
     zoomControl: true,
-    preferCanvas: true,
-    attributionControl: false
+    preferCanvas: true
   }).setView([-7.65, 112.7], 7);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(state.map);
+  const darkBase = L.tileLayer(
+    'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    {
+      maxZoom: 20,
+      subdomains: 'abcd',
+      attribution:
+        '&copy; OpenStreetMap contributors &copy; CARTO'
+    }
+  ).addTo(state.map);
+
+  const osmBase = L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }
+  );
+
+  L.control.layers(
+    {
+      'Dark Matter': darkBase,
+      'OpenStreetMap': osmBase
+    },
+    null,
+    { collapsed: true }
+  ).addTo(state.map);
+
+  addMapLegends();
 }
 
-function formatDateCompactID(value) {
-  if (!value) return '–';
-  return new Intl.DateTimeFormat('id-ID', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  }).format(new Date(`${value}T00:00:00`));
-}
+function addMapLegends() {
+  const periodLegend = L.control({ position: 'bottomleft' });
+  periodLegend.onAdd = function () {
+    const div = L.DomUtil.create('div', 'map-legend');
+    div.innerHTML = `
+      <strong>Periode Waktu</strong>
+      ${PERIODS.map(period => `
+        <div><i style="background:${PERIOD_COLORS[period]};border-radius:50%;"></i>${PERIOD_SHORT[period]}</div>
+      `).join('')}
+    `;
+    return div;
+  };
+  periodLegend.addTo(state.map);
 
-function updateDateDisplays() {
-  if (elements.startDateDisplay) {
-    elements.startDateDisplay.textContent = formatDateCompactID(elements.startDate.value);
-  }
-  if (elements.endDateDisplay) {
-    elements.endDateDisplay.textContent = formatDateCompactID(elements.endDate.value);
-  }
+  const districtLegend = L.control({ position: 'bottomright' });
+  districtLegend.onAdd = function () {
+    const div = L.DomUtil.create('div', 'map-legend');
+    div.innerHTML = `
+      <strong>Jumlah Sambaran</strong>
+      <div><i style="background:#172f48"></i>0</div>
+      <div><i style="background:#245274"></i>1–5</div>
+      <div><i style="background:#287fa1"></i>6–10</div>
+      <div><i style="background:#21b6c7"></i>11–20</div>
+      <div><i style="background:#ffd166"></i>&gt;20</div>
+    `;
+    return div;
+  };
+  districtLegend.addTo(state.map);
 }
 
 function setupFilterInputs() {
@@ -138,7 +168,6 @@ function setupFilterInputs() {
   elements.endDate.max = maxDate;
   elements.startDate.value = minDate;
   elements.endDate.value = maxDate;
-  updateDateDisplays();
 
   elements.periodLabel.textContent =
     `${formatDateID(minDate)} – ${formatDateID(maxDate)} • ${formatNumber(state.metadata.jumlah_data)} data sambaran`;
@@ -170,38 +199,7 @@ function bindEvents() {
     control.addEventListener('change', applyFilters);
   });
 
-  elements.startDate.addEventListener('change', updateDateDisplays);
-  elements.endDate.addEventListener('change', updateDateDisplays);
-
   elements.resetButton.addEventListener('click', resetFilters);
-
-  const setFilterOpen = (open) => {
-    if (!elements.filterPanel || !elements.mobileFilterToggle) return;
-    elements.filterPanel.classList.toggle('is-open', open);
-    elements.mobileFilterToggle.setAttribute('aria-expanded', String(open));
-    elements.mobileFilterToggle.innerHTML = open
-      ? '<span aria-hidden="true">✕</span> Tutup Filter'
-      : '<span aria-hidden="true">☰</span> Filter &amp; Layer';
-  };
-
-  if (elements.mobileFilterToggle) {
-    elements.mobileFilterToggle.addEventListener('click', () => {
-      const open = !elements.filterPanel.classList.contains('is-open');
-      setFilterOpen(open);
-      if (open && window.innerWidth <= 820) {
-        window.setTimeout(() => elements.filterPanel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
-      }
-    });
-  }
-
-  if (elements.closeFilterButton) {
-    elements.closeFilterButton.addEventListener('click', () => {
-      setFilterOpen(false);
-      if (window.innerWidth <= 820) {
-        document.querySelector('.map-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  }
 
   elements.fitButton.addEventListener('click', () => {
     if (state.provinceBounds) state.map.fitBounds(state.provinceBounds, { padding: [20, 20] });
@@ -659,7 +657,6 @@ function zoomToSelectedDistrict() {
 function resetFilters() {
   elements.startDate.value = state.metadata.periode_mulai;
   elements.endDate.value = state.metadata.periode_selesai;
-  updateDateDisplays();
   elements.districtFilter.value = 'ALL';
 
   document.querySelectorAll('.period-filter, .polarity-filter')
@@ -699,15 +696,6 @@ async function initialize() {
       state.map.invalidateSize();
       elements.loadingOverlay.classList.add('hidden');
     }, 250);
-
-    window.addEventListener('resize', () => {
-      window.clearTimeout(window.__mapResizeTimer);
-      window.__mapResizeTimer = window.setTimeout(() => state.map.invalidateSize(), 120);
-    });
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', () => state.map.invalidateSize());
-    }
   } catch (error) {
     console.error(error);
     elements.loadingOverlay.innerHTML = `
