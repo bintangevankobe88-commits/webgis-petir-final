@@ -752,7 +752,7 @@ function buildCharts() {
   state.polarityChart = new Chart(document.getElementById('polarityChart'), {
     type: 'doughnut',
     data: {
-      labels: ['Negatif (−)', 'Positif (+)', 'Lainnya'],
+      labels: ['Negatif (-)', 'Positif (+)', 'Lainnya'],
       datasets: [{
         data: [0, 0, 0],
         backgroundColor: ['#20c7ff', '#ffc247', '#60758c'],
