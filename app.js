@@ -32,8 +32,11 @@ const state = {
   districtLayer: null,
   periodChart: null,
   polarityChart: null,
-  provinceBounds: null
+  provinceBounds: null,
+  filterPanelOpen: false
 };
+
+const mobileLayoutQuery = window.matchMedia('(max-width: 820px)');
 
 const elements = {
   loadingOverlay: document.getElementById('loadingOverlay'),
@@ -191,40 +194,38 @@ function setupFilterInputs() {
 }
 
 function isMobileLayout() {
-  return window.matchMedia('(max-width: 820px)').matches;
+  return mobileLayoutQuery.matches;
 }
 
-function setFilterPanelOpen(isOpen, options = {}) {
+function setFilterPanelOpen(isOpen) {
   if (!elements.filterPanel) return;
 
   if (!isMobileLayout()) {
+    state.filterPanelOpen = true;
     elements.filterPanel.hidden = false;
     elements.filterToggleButton?.setAttribute('aria-expanded', 'true');
+    elements.filterToggleButton?.classList.add('is-active');
     return;
   }
 
-  elements.filterPanel.hidden = !isOpen;
-  elements.filterToggleButton?.setAttribute('aria-expanded', String(isOpen));
-  elements.filterToggleButton?.classList.toggle('is-active', isOpen);
-
-  if (isOpen && options.scroll !== false) {
-    window.requestAnimationFrame(() => {
-      elements.filterPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  }
-
-  if (!isOpen && options.scrollTarget) {
-    const target = document.querySelector(options.scrollTarget);
-    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  state.filterPanelOpen = Boolean(isOpen);
+  elements.filterPanel.hidden = !state.filterPanelOpen;
+  elements.filterToggleButton?.setAttribute(
+    'aria-expanded',
+    String(state.filterPanelOpen)
+  );
+  elements.filterToggleButton?.classList.toggle(
+    'is-active',
+    state.filterPanelOpen
+  );
 }
 
-function syncFilterPanelWithViewport() {
-  if (isMobileLayout()) {
-    setFilterPanelOpen(false, { scroll: false });
-  } else {
-    setFilterPanelOpen(true, { scroll: false });
-  }
+function initializeFilterPanelLayout() {
+  setFilterPanelOpen(!isMobileLayout());
+}
+
+function handleLayoutBreakpointChange(event) {
+  setFilterPanelOpen(!event.matches);
 }
 
 function bindEvents() {
@@ -243,18 +244,26 @@ function bindEvents() {
   elements.resetButton.addEventListener('click', resetFilters);
 
   elements.filterToggleButton?.addEventListener('click', () => {
-    setFilterPanelOpen(elements.filterPanel?.hidden ?? true);
+    setFilterPanelOpen(!state.filterPanelOpen);
   });
 
   elements.closeFilterButton?.addEventListener('click', () => {
-    setFilterPanelOpen(false, { scrollTarget: '.map-card' });
+    setFilterPanelOpen(false);
   });
 
   elements.applyFilterButton?.addEventListener('click', () => {
-    setFilterPanelOpen(false, { scrollTarget: '.analysis-grid' });
+    applyFilters();
+    setFilterPanelOpen(false);
   });
 
-  window.addEventListener('resize', syncFilterPanelWithViewport);
+  // Hanya bereaksi ketika benar-benar berpindah antara layout HP dan desktop.
+  // Scroll pada browser HP dapat mengubah tinggi viewport, tetapi tidak akan
+  // menutup panel filter lagi.
+  if (typeof mobileLayoutQuery.addEventListener === 'function') {
+    mobileLayoutQuery.addEventListener('change', handleLayoutBreakpointChange);
+  } else {
+    mobileLayoutQuery.addListener(handleLayoutBreakpointChange);
+  }
 
   elements.fitButton.addEventListener('click', () => {
     if (state.provinceBounds) state.map.fitBounds(state.provinceBounds, { padding: [20, 20] });
@@ -743,7 +752,7 @@ async function initialize() {
     setupFilterInputs();
     buildCharts();
     bindEvents();
-    syncFilterPanelWithViewport();
+    initializeFilterPanelLayout();
     applyFilters();
 
     state.map.fitBounds(state.provinceBounds, { padding: [20, 20] });
