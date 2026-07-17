@@ -14,7 +14,7 @@
     crossorigin=""
   />
 
-  <link rel="stylesheet" href="style.css?v=filter-stable-20260717-2" />
+  <link rel="stylesheet" href="style.css?v=multi-district-20260717-5" />
 </head>
 <body>
   <div id="loadingOverlay" class="loading-overlay">
@@ -101,10 +101,35 @@
         </div>
 
         <div class="filter-group">
-          <label for="districtFilter">Kabupaten/Kota</label>
-          <select id="districtFilter">
-            <option value="ALL">Semua wilayah</option>
-          </select>
+          <span class="district-filter-label">Kabupaten/Kota</span>
+
+          <div
+            id="districtFilter"
+            class="district-multi-select"
+            role="group"
+            aria-label="Pilih satu atau beberapa kabupaten/kota"
+          >
+            <label class="district-option district-option-all">
+              <input
+                id="districtAll"
+                class="district-filter"
+                type="checkbox"
+                value="ALL"
+                checked
+              />
+              <span>Semua wilayah</span>
+            </label>
+
+            <div
+              id="districtOptions"
+              class="district-options"
+              aria-label="Daftar kabupaten dan kota"
+            ></div>
+
+            <small id="districtSelectionSummary" class="district-selection-summary">
+              Semua wilayah dipilih
+            </small>
+          </div>
         </div>
 
         <fieldset class="filter-group">
@@ -255,6 +280,6 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 
-  <script src="app.js?v=return-to-map-20260717-4"></script>
+  <script src="app.js?v=multi-district-20260717-5"></script>
 </body>
 </html>
