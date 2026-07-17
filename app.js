@@ -50,6 +50,9 @@ const elements = {
   startDate: document.getElementById('startDate'),
   endDate: document.getElementById('endDate'),
   districtFilter: document.getElementById('districtFilter'),
+  districtOptions: document.getElementById('districtOptions'),
+  districtAll: document.getElementById('districtAll'),
+  districtSelectionSummary: document.getElementById('districtSelectionSummary'),
   resetButton: document.getElementById('resetButton'),
   fitButton: document.getElementById('fitButton'),
   togglePoints: document.getElementById('togglePoints'),
@@ -185,12 +188,18 @@ function setupFilterInputs() {
       .filter(name => name !== 'Tidak diketahui')
   )].sort((a, b) => a.localeCompare(b, 'id'));
 
-  for (const district of districts) {
-    const option = document.createElement('option');
-    option.value = district;
-    option.textContent = district;
-    elements.districtFilter.appendChild(option);
-  }
+  elements.districtOptions.innerHTML = districts.map(district => `
+    <label class="district-option">
+      <input
+        class="district-filter"
+        type="checkbox"
+        value="${escapeHTML(district)}"
+      />
+      <span>${escapeHTML(district)}</span>
+    </label>
+  `).join('');
+
+  updateDistrictSelectionSummary();
 }
 
 function isMobileLayout() {
@@ -232,13 +241,43 @@ function bindEvents() {
   const filterControls = [
     elements.startDate,
     elements.endDate,
-    elements.districtFilter,
     ...document.querySelectorAll('.period-filter'),
     ...document.querySelectorAll('.polarity-filter')
   ];
 
   filterControls.forEach(control => {
     control.addEventListener('change', applyFilters);
+  });
+
+  elements.districtFilter?.addEventListener('change', event => {
+    const changedInput = event.target.closest('.district-filter');
+    if (!changedInput) return;
+
+    const districtInputs = [
+      ...document.querySelectorAll('.district-filter:not([value="ALL"])')
+    ];
+
+    if (changedInput.value === 'ALL') {
+      if (changedInput.checked) {
+        districtInputs.forEach(input => {
+          input.checked = false;
+        });
+      } else if (!districtInputs.some(input => input.checked)) {
+        changedInput.checked = true;
+      }
+    } else {
+      if (changedInput.checked) {
+        elements.districtAll.checked = false;
+      }
+
+      if (!districtInputs.some(input => input.checked)) {
+        elements.districtAll.checked = true;
+      }
+    }
+
+    updateDistrictSelectionSummary();
+    applyFilters();
+    zoomToSelectedDistricts();
   });
 
   elements.resetButton.addEventListener('click', resetFilters);
@@ -303,11 +342,14 @@ function bindEvents() {
   }
 
   elements.fitButton.addEventListener('click', () => {
-    if (state.provinceBounds) state.map.fitBounds(state.provinceBounds, { padding: [20, 20] });
+    if (state.provinceBounds) {
+      state.map.fitBounds(state.provinceBounds, { padding: [20, 20] });
+    }
   });
 
   elements.togglePoints.addEventListener('change', () => {
     if (!state.pointLayer) return;
+
     if (elements.togglePoints.checked) {
       state.pointLayer.addTo(state.map);
     } else {
@@ -317,14 +359,13 @@ function bindEvents() {
 
   elements.toggleDistricts.addEventListener('change', () => {
     if (!state.districtLayer) return;
+
     if (elements.toggleDistricts.checked) {
       state.districtLayer.addTo(state.map);
     } else {
       state.map.removeLayer(state.districtLayer);
     }
   });
-
-  elements.districtFilter.addEventListener('change', zoomToSelectedDistrict);
 }
 
 function getSelectedValues(selector) {
@@ -333,10 +374,39 @@ function getSelectedValues(selector) {
     .map(input => input.value);
 }
 
+function getSelectedDistricts() {
+  const selected = [
+    ...document.querySelectorAll('.district-filter:checked')
+  ].map(input => input.value);
+
+  return selected.length ? selected : ['ALL'];
+}
+
+function updateDistrictSelectionSummary() {
+  if (!elements.districtSelectionSummary) return;
+
+  const selectedDistricts = getSelectedDistricts();
+
+  if (selectedDistricts.includes('ALL')) {
+    elements.districtSelectionSummary.textContent =
+      'Semua wilayah dipilih';
+    return;
+  }
+
+  if (selectedDistricts.length === 1) {
+    elements.districtSelectionSummary.textContent =
+      `1 wilayah dipilih: ${selectedDistricts[0]}`;
+    return;
+  }
+
+  elements.districtSelectionSummary.textContent =
+    `${selectedDistricts.length} wilayah dipilih`;
+}
+
 function applyFilters() {
   const startDate = elements.startDate.value;
   const endDate = elements.endDate.value;
-  const district = elements.districtFilter.value;
+  const selectedDistricts = new Set(getSelectedDistricts());
   const periods = new Set(getSelectedValues('.period-filter'));
   const polarities = new Set(getSelectedValues('.polarity-filter'));
 
@@ -349,7 +419,8 @@ function applyFilters() {
       (!endDate || props.tanggal <= endDate);
 
     const districtOK =
-      district === 'ALL' || featureDistrict === district;
+      selectedDistricts.has('ALL') ||
+      selectedDistricts.has(featureDistrict);
 
     const periodOK = periods.has(props.periode_waktu);
     const polarityOK = polarities.has(props.polaritas);
@@ -736,29 +807,56 @@ function updateDistrictTable() {
   `).join('');
 }
 
-function zoomToSelectedDistrict() {
-  const selected = elements.districtFilter.value;
+function zoomToSelectedDistricts() {
+  const selectedDistricts = getSelectedDistricts();
 
-  if (selected === 'ALL') {
+  if (selectedDistricts.includes('ALL')) {
     if (state.provinceBounds) {
       state.map.fitBounds(state.provinceBounds, { padding: [20, 20] });
     }
     return;
   }
 
+  const selectedSet = new Set(selectedDistricts);
+  const combinedBounds = L.latLngBounds([]);
+  let singleSelectedLayer = null;
+
   state.districtLayer.eachLayer(layer => {
-    const district = normalizeDistrictName(layer.feature.properties.kabupaten);
-    if (district === selected) {
-      state.map.fitBounds(layer.getBounds(), { padding: [30, 30], maxZoom: 10 });
-      layer.openPopup();
+    const district = normalizeDistrictName(
+      layer.feature.properties.kabupaten
+    );
+
+    if (!selectedSet.has(district)) return;
+
+    combinedBounds.extend(layer.getBounds());
+
+    if (selectedDistricts.length === 1) {
+      singleSelectedLayer = layer;
     }
   });
+
+  if (combinedBounds.isValid()) {
+    state.map.fitBounds(combinedBounds, {
+      padding: [30, 30],
+      maxZoom: selectedDistricts.length === 1 ? 10 : 9
+    });
+  }
+
+  if (singleSelectedLayer) {
+    singleSelectedLayer.openPopup();
+  }
 }
 
 function resetFilters() {
   elements.startDate.value = state.metadata.periode_mulai;
   elements.endDate.value = state.metadata.periode_selesai;
-  elements.districtFilter.value = 'ALL';
+
+  document.querySelectorAll('.district-filter')
+    .forEach(input => {
+      input.checked = input.value === 'ALL';
+    });
+
+  updateDistrictSelectionSummary();
 
   document.querySelectorAll('.period-filter, .polarity-filter')
     .forEach(input => { input.checked = true; });
