@@ -14,7 +14,7 @@
     crossorigin=""
   />
 
-  <link rel="stylesheet" href="style.css?v=multi-district-20260717-5" />
+  <link rel="stylesheet" href="style.css?v=district-search-20260717-6" />
 </head>
 <body>
   <div id="loadingOverlay" class="loading-overlay">
@@ -109,6 +109,18 @@
             role="group"
             aria-label="Pilih satu atau beberapa kabupaten/kota"
           >
+            <div class="district-search-box">
+              <input
+                id="districtSearch"
+                class="district-search"
+                type="search"
+                placeholder="Cari kabupaten/kota..."
+                aria-label="Cari kabupaten atau kota"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+
             <label class="district-option district-option-all">
               <input
                 id="districtAll"
@@ -120,11 +132,21 @@
               <span>Semua wilayah</span>
             </label>
 
-            <div
-              id="districtOptions"
-              class="district-options"
-              aria-label="Daftar kabupaten dan kota"
-            ></div>
+            <div class="district-options-wrap">
+              <div
+                id="districtOptions"
+                class="district-options"
+                aria-label="Daftar kabupaten dan kota"
+              ></div>
+
+              <div
+                id="districtSearchEmpty"
+                class="district-search-empty"
+                hidden
+              >
+                Wilayah tidak ditemukan.
+              </div>
+            </div>
 
             <small id="districtSelectionSummary" class="district-selection-summary">
               Semua wilayah dipilih
@@ -280,6 +302,6 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 
-  <script src="app.js?v=multi-district-20260717-5"></script>
+  <script src="app.js?v=district-search-20260717-6"></script>
 </body>
 </html>
