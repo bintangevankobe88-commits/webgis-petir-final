@@ -18,7 +18,7 @@ const PERIOD_COLORS = {
 const PERIOD_SHORT = {
   'Dini Hari': 'Dini Hari',
   'Pagi': 'Pagi',
-  'Siang-Sore': 'Siang–Sore',
+  'Siang-Sore': 'Siang-Sore',
   'Malam': 'Malam'
 };
 
@@ -160,9 +160,9 @@ function addMapLegends() {
     div.innerHTML = `
       <strong>Jumlah Sambaran</strong>
       <div><i style="background:#172f48"></i>0</div>
-      <div><i style="background:#245274"></i>1–5</div>
-      <div><i style="background:#287fa1"></i>6–10</div>
-      <div><i style="background:#21b6c7"></i>11–20</div>
+      <div><i style="background:#245274"></i>1-5</div>
+      <div><i style="background:#287fa1"></i>6-10</div>
+      <div><i style="background:#21b6c7"></i>11-20</div>
       <div><i style="background:#ffd166"></i>&gt;20</div>
     `;
     return div;
@@ -182,7 +182,7 @@ function setupFilterInputs() {
   elements.endDate.value = maxDate;
 
   elements.periodLabel.textContent =
-    `${formatDateID(minDate)} – ${formatDateID(maxDate)} • ${formatNumber(state.metadata.jumlah_data)} data sambaran`;
+    `${formatDateID(minDate)} - ${formatDateID(maxDate)} • ${formatNumber(state.metadata.jumlah_data)} data sambaran`;
 
   const districts = [...new Set(
     state.pointsData.features
@@ -614,7 +614,7 @@ function renderDistrictLayer() {
           <dt>Total filter</dt><dd>${formatNumber(row.total)} sambaran</dd>
           <dt>Dini Hari</dt><dd>${formatNumber(row['Dini Hari'])}</dd>
           <dt>Pagi</dt><dd>${formatNumber(row['Pagi'])}</dd>
-          <dt>Siang–Sore</dt><dd>${formatNumber(row['Siang-Sore'])}</dd>
+          <dt>Siang-Sore</dt><dd>${formatNumber(row['Siang-Sore'])}</dd>
           <dt>Malam</dt><dd>${formatNumber(row['Malam'])}</dd>
           <dt>Luas</dt><dd>${formatNumber(Number(feature.properties.luas_km2) || 0, 2)} km²</dd>
         </dl>
@@ -696,7 +696,7 @@ function updateDashboard() {
     elements.dominantPeriod.textContent = 'Tidak ada data';
     elements.dominantPeriodDetail.textContent = 'Ubah filter untuk menampilkan data';
     elements.topDistrict.textContent = 'Tidak ada data';
-    elements.topDistrictDetail.textContent = '–';
+    elements.topDistrictDetail.textContent = '-';
     elements.averageCurrent.textContent = '0 kA';
   }
 }
@@ -708,7 +708,7 @@ function buildCharts() {
   state.periodChart = new Chart(document.getElementById('periodChart'), {
     type: 'bar',
     data: {
-      labels: ['Dini Hari', 'Pagi', 'Siang–Sore', 'Malam'],
+      labels: ['Dini Hari', 'Pagi', 'Siang-Sore', 'Malam'],
       datasets: [{
         label: 'Jumlah Sambaran',
         data: [0, 0, 0, 0],
