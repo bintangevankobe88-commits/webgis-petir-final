@@ -268,19 +268,27 @@ function bindEvents() {
     applyFilters();
     setFilterPanelOpen(false);
 
-    // Setelah pengguna selesai, arahkan kembali ke analisis temporal.
+    // Setelah pengguna selesai mengatur filter, arahkan kembali ke peta
+    // agar perubahan titik, wilayah, dan statistik langsung terlihat.
     window.requestAnimationFrame(() => {
-      const analysisSection = document.querySelector('.analysis-grid');
-      if (!analysisSection) return;
+      window.requestAnimationFrame(() => {
+        const mapSection = document.querySelector('.map-card');
+        if (!mapSection) return;
 
-      const analysisTop =
-        window.scrollY +
-        analysisSection.getBoundingClientRect().top -
-        12;
+        const mapTop =
+          window.scrollY +
+          mapSection.getBoundingClientRect().top -
+          12;
 
-      window.scrollTo({
-        top: Math.max(analysisTop, 0),
-        behavior: 'smooth'
+        window.scrollTo({
+          top: Math.max(mapTop, 0),
+          behavior: 'smooth'
+        });
+
+        // Pastikan ukuran Leaflet dihitung ulang setelah panel filter ditutup.
+        window.setTimeout(() => {
+          state.map?.invalidateSize();
+        }, 350);
       });
     });
   });
