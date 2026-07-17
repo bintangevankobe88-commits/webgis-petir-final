@@ -244,16 +244,45 @@ function bindEvents() {
   elements.resetButton.addEventListener('click', resetFilters);
 
   elements.filterToggleButton?.addEventListener('click', () => {
-    setFilterPanelOpen(!state.filterPanelOpen);
-  });
+    // Tombol Atur Filter hanya membuka panel, tidak menutupnya.
+    setFilterPanelOpen(true);
 
-  elements.closeFilterButton?.addEventListener('click', () => {
-    setFilterPanelOpen(false);
+    // Setelah panel benar-benar muncul, arahkan pengguna langsung
+    // ke bagian filter tanpa menutup panel ketika halaman di-scroll.
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const panelTop =
+          window.scrollY +
+          elements.filterPanel.getBoundingClientRect().top -
+          12;
+
+        window.scrollTo({
+          top: Math.max(panelTop, 0),
+          behavior: 'smooth'
+        });
+      });
+    });
   });
 
   elements.applyFilterButton?.addEventListener('click', () => {
     applyFilters();
     setFilterPanelOpen(false);
+
+    // Setelah pengguna selesai, arahkan kembali ke analisis temporal.
+    window.requestAnimationFrame(() => {
+      const analysisSection = document.querySelector('.analysis-grid');
+      if (!analysisSection) return;
+
+      const analysisTop =
+        window.scrollY +
+        analysisSection.getBoundingClientRect().top -
+        12;
+
+      window.scrollTo({
+        top: Math.max(analysisTop, 0),
+        behavior: 'smooth'
+      });
+    });
   });
 
   // Hanya bereaksi ketika benar-benar berpindah antara layout HP dan desktop.
