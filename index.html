@@ -14,7 +14,7 @@
     crossorigin=""
   />
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=filter-mobile-20260717-1" />
 </head>
 <body>
   <div id="loadingOverlay" class="loading-overlay">
@@ -77,23 +77,28 @@
     </section>
 
     <section class="workspace">
-      <aside class="control-panel">
+      <aside class="control-panel" id="filterPanel">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">FILTER DATA</p>
             <h2>Atur tampilan peta</h2>
           </div>
-          <button id="resetButton" class="button button-ghost" type="button">Reset</button>
+          <div class="panel-actions">
+            <button id="resetButton" class="button button-ghost" type="button">Reset</button>
+            <button id="closeFilterButton" class="button button-ghost mobile-only-button" type="button" aria-label="Tutup filter">Tutup</button>
+          </div>
         </div>
 
-        <div class="filter-group">
-          <label for="startDate">Tanggal mulai</label>
-          <input id="startDate" type="date" />
-        </div>
+        <div class="date-range-grid" aria-label="Rentang tanggal">
+          <div class="filter-group date-field">
+            <label for="startDate">Tanggal mulai</label>
+            <input id="startDate" type="date" />
+          </div>
 
-        <div class="filter-group">
-          <label for="endDate">Tanggal selesai</label>
-          <input id="endDate" type="date" />
+          <div class="filter-group date-field">
+            <label for="endDate">Tanggal selesai</label>
+            <input id="endDate" type="date" />
+          </div>
         </div>
 
         <div class="filter-group">
@@ -157,6 +162,8 @@
           <strong>Petunjuk</strong>
           <p>Klik titik petir atau polygon kabupaten/kota untuk melihat rincian atribut.</p>
         </div>
+
+        <button id="applyFilterButton" class="button filter-done-button" type="button">Selesai mengatur filter</button>
       </aside>
 
       <section class="map-card">
@@ -165,7 +172,10 @@
             <p class="eyebrow">WEB MAP</p>
             <h2>Distribusi Spasial dan Temporal Sambaran Petir</h2>
           </div>
-          <button id="fitButton" class="button" type="button">Tampilkan seluruh Jawa Timur</button>
+          <div class="map-actions">
+            <button id="filterToggleButton" class="button button-ghost mobile-filter-toggle" type="button" aria-controls="filterPanel" aria-expanded="false">Atur Filter</button>
+            <button id="fitButton" class="button" type="button">Tampilkan seluruh Jawa Timur</button>
+          </div>
         </div>
 
         <div id="map" role="application" aria-label="Peta interaktif sambaran petir Jawa Timur"></div>
@@ -246,6 +256,6 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=filter-mobile-20260717-1"></script>
 </body>
 </html>
