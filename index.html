@@ -27,54 +27,87 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   />
-  <link rel="stylesheet" href="style.css?v=light-20260718-2" />
+  <link rel="stylesheet" href="style.css?v=light-20260718-3" />
 </head>
 <body>
   <div id="loadingOverlay" class="loading-overlay" aria-live="polite">
     <div class="loader" aria-hidden="true"></div>
-    <p>Memuat data spasial...</p>
+    <p data-i18n="loading">Memuat data spasial...</p>
   </div>
 
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="ThunderPulse, kembali ke atas">
+    <a class="brand" href="#top" aria-label="ThunderPulse, kembali ke atas" data-i18n-aria="brandHomeAria">
       <span class="material-symbols-outlined brand-icon" aria-hidden="true">thunderstorm</span>
       <span>ThunderPulse</span>
     </a>
 
-    <nav class="desktop-nav" aria-label="Navigasi utama">
-      <a href="#mapSection">Peta</a>
-      <a href="#analysisSection">Analisis</a>
-      <a href="#summarySection">Ringkasan</a>
-      <span class="source-badge">
-        <span class="material-symbols-outlined" aria-hidden="true">sensors</span>
-        BMKG
-      </span>
-    </nav>
+    <div class="topbar-actions">
+      <nav class="desktop-nav" aria-label="Navigasi utama" data-i18n-aria="mainNavigationAria">
+        <a href="#mapSection" data-i18n="navMap">Peta</a>
+        <a href="#analysisSection" data-i18n="navAnalysis">Analisis</a>
+        <a href="#summarySection" data-i18n="navSummary">Ringkasan</a>
+        <span class="source-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">sensors</span>
+          BMKG
+        </span>
+      </nav>
 
-    <span class="material-symbols-outlined mobile-signal" aria-hidden="true">sensors</span>
+      <div class="language-picker">
+        <button
+          id="languageToggle"
+          class="language-toggle"
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded="false"
+          aria-controls="languageMenu"
+          aria-label="Pilih bahasa"
+          data-i18n-aria="languageButtonAria"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">language</span>
+          <span id="languageCode">ID</span>
+          <span class="material-symbols-outlined language-chevron" aria-hidden="true">expand_more</span>
+        </button>
+
+        <div
+          id="languageMenu"
+          class="language-menu"
+          role="menu"
+          aria-label="Pilihan bahasa"
+          data-i18n-aria="languageMenuAria"
+          hidden
+        >
+          <button class="language-option is-selected" type="button" role="menuitemradio" aria-checked="true" data-language="id">
+            <span>Bahasa Indonesia</span><strong>ID</strong>
+          </button>
+          <button class="language-option" type="button" role="menuitemradio" aria-checked="false" data-language="en">
+            <span>English</span><strong>EN</strong>
+          </button>
+        </div>
+      </div>
+    </div>
   </header>
 
   <main id="top">
     <section class="hero" aria-labelledby="dashboardTitle">
-      <p class="eyebrow">MONITORING SAMBARAN PETIR</p>
-      <h1 id="dashboardTitle">Jawa Timur Dashboard</h1>
-      <p id="periodLabel" class="subtitle">Memuat periode data...</p>
+      <p class="eyebrow" data-i18n="heroEyebrow">MONITORING SAMBARAN PETIR</p>
+      <h1 id="dashboardTitle" data-i18n="dashboardTitle">Jawa Timur Dashboard</h1>
+      <p id="periodLabel" class="subtitle" data-i18n="loadingPeriod">Memuat periode data...</p>
     </section>
 
-    <section class="stats-grid" aria-label="Ringkasan statistik">
+    <section class="stats-grid" aria-label="Ringkasan statistik" data-i18n-aria="statsAria">
       <article class="stat-card">
         <span class="material-symbols-outlined stat-icon" aria-hidden="true">bolt</span>
         <div>
-          <p>TOTAL SAMBARAN</p>
+          <p data-i18n="totalStrikesLabel">TOTAL SAMBARAN</p>
           <strong id="totalStrikes">–</strong>
-          <small>Filter aktif</small>
+          <small data-i18n="activeFilter">Filter aktif</small>
         </div>
       </article>
 
       <article class="stat-card">
         <span class="material-symbols-outlined stat-icon" aria-hidden="true">schedule</span>
         <div>
-          <p>PERIODE DOMINAN</p>
+          <p data-i18n="dominantPeriodLabel">PERIODE DOMINAN</p>
           <strong id="dominantPeriod">–</strong>
           <small id="dominantPeriodDetail">–</small>
         </div>
@@ -83,7 +116,7 @@
       <article class="stat-card">
         <span class="material-symbols-outlined stat-icon" aria-hidden="true">location_on</span>
         <div>
-          <p>WILAYAH TERBANYAK</p>
+          <p data-i18n="topRegionLabel">WILAYAH TERBANYAK</p>
           <strong id="topDistrict">–</strong>
           <small id="topDistrictDetail">–</small>
         </div>
@@ -92,41 +125,42 @@
       <article class="stat-card">
         <span class="material-symbols-outlined stat-icon" aria-hidden="true">speed</span>
         <div>
-          <p>RATA-RATA ARUS</p>
+          <p data-i18n="averageCurrentLabel">RATA-RATA ARUS</p>
           <strong id="averageCurrent">–</strong>
-          <small>Nilai absolut</small>
+          <small data-i18n="absoluteValue">Nilai absolut</small>
         </div>
       </article>
     </section>
 
-    <section class="workspace" aria-label="Peta dan filter data">
+    <section class="workspace" aria-label="Peta dan filter data" data-i18n-aria="workspaceAria">
       <aside class="control-panel" id="filterPanel">
         <div class="panel-heading">
           <div>
-            <p class="eyebrow">FILTER DATA</p>
-            <h2>Atur tampilan peta</h2>
+            <p class="eyebrow" data-i18n="filterEyebrow">FILTER DATA</p>
+            <h2 data-i18n="filterTitle">Atur tampilan peta</h2>
           </div>
-          <button id="resetButton" class="button button-secondary" type="button">Reset</button>
+          <button id="resetButton" class="button button-secondary" type="button" data-i18n="reset">Reset</button>
         </div>
 
-        <div class="date-range-grid" aria-label="Rentang tanggal">
+        <div class="date-range-grid" aria-label="Rentang tanggal" data-i18n-aria="dateRangeAria">
           <div class="filter-group date-field">
-            <label for="startDate">Tanggal mulai</label>
+            <label for="startDate" data-i18n="startDate">Tanggal mulai</label>
             <input id="startDate" type="date" />
           </div>
           <div class="filter-group date-field">
-            <label for="endDate">Tanggal selesai</label>
+            <label for="endDate" data-i18n="endDate">Tanggal selesai</label>
             <input id="endDate" type="date" />
           </div>
         </div>
 
         <div class="filter-group">
-          <span class="district-filter-label">Kabupaten/Kota</span>
+          <span class="district-filter-label" data-i18n="districtLabel">Kabupaten/Kota</span>
           <div
             id="districtFilter"
             class="district-multi-select"
             role="group"
             aria-label="Pilih satu atau beberapa kabupaten atau kota"
+            data-i18n-aria="districtGroupAria"
           >
             <div class="district-search-box">
               <input
@@ -135,6 +169,8 @@
                 type="search"
                 placeholder="Cari kabupaten/kota..."
                 aria-label="Cari kabupaten atau kota"
+                data-i18n-placeholder="districtSearchPlaceholder"
+                data-i18n-aria="districtSearchAria"
                 autocomplete="off"
                 spellcheck="false"
               />
@@ -142,12 +178,12 @@
 
             <label class="district-option district-option-all">
               <input id="districtAll" class="district-filter" type="checkbox" value="ALL" checked />
-              <span>Semua wilayah</span>
+              <span data-i18n="allRegions">Semua wilayah</span>
             </label>
 
             <div class="district-options-wrap">
-              <div id="districtOptions" class="district-options" aria-label="Daftar kabupaten dan kota"></div>
-              <div id="districtSearchEmpty" class="district-search-empty" hidden>
+              <div id="districtOptions" class="district-options" aria-label="Daftar kabupaten dan kota" data-i18n-aria="districtListAria"></div>
+              <div id="districtSearchEmpty" class="district-search-empty" data-i18n="districtNotFound" hidden>
                 Wilayah tidak ditemukan.
               </div>
             </div>
@@ -159,61 +195,61 @@
         </div>
 
         <fieldset class="filter-group">
-          <legend>Periode waktu</legend>
+          <legend data-i18n="timePeriod">Periode waktu</legend>
           <label class="check-row">
             <input type="checkbox" class="period-filter" value="Dini Hari" checked />
             <span class="legend-dot dini" aria-hidden="true"></span>
-            <span>Dini Hari <small>00.00–05.59 WIB</small></span>
+            <span><span data-i18n="periodDawn">Dini Hari</span> <small>00.00–05.59 WIB</small></span>
           </label>
           <label class="check-row">
             <input type="checkbox" class="period-filter" value="Pagi" checked />
             <span class="legend-dot pagi" aria-hidden="true"></span>
-            <span>Pagi <small>06.00–11.59 WIB</small></span>
+            <span><span data-i18n="periodMorning">Pagi</span> <small>06.00–11.59 WIB</small></span>
           </label>
           <label class="check-row">
             <input type="checkbox" class="period-filter" value="Siang-Sore" checked />
             <span class="legend-dot siang" aria-hidden="true"></span>
-            <span>Siang-Sore <small>12.00–17.59 WIB</small></span>
+            <span><span data-i18n="periodAfternoon">Siang-Sore</span> <small>12.00–17.59 WIB</small></span>
           </label>
           <label class="check-row">
             <input type="checkbox" class="period-filter" value="Malam" checked />
             <span class="legend-dot malam" aria-hidden="true"></span>
-            <span>Malam <small>18.00–23.59 WIB</small></span>
+            <span><span data-i18n="periodEvening">Malam</span> <small>18.00–23.59 WIB</small></span>
           </label>
         </fieldset>
 
         <fieldset class="filter-group">
-          <legend>Polaritas</legend>
+          <legend data-i18n="polarity">Polaritas</legend>
           <label class="check-row simple-check">
             <input type="checkbox" class="polarity-filter" value="(-)" checked />
-            <span>Negatif (-)</span>
+            <span data-i18n="negativePolarity">Negatif (-)</span>
           </label>
           <label class="check-row simple-check">
             <input type="checkbox" class="polarity-filter" value="(+)" checked />
-            <span>Positif (+)</span>
+            <span data-i18n="positivePolarity">Positif (+)</span>
           </label>
         </fieldset>
 
         <fieldset class="filter-group">
-          <legend>Layer</legend>
+          <legend data-i18n="layers">Layer</legend>
           <label class="switch-row">
             <input id="togglePoints" type="checkbox" checked />
             <span class="switch" aria-hidden="true"></span>
-            <span>Titik sambaran</span>
+            <span data-i18n="strikePoints">Titik sambaran</span>
           </label>
           <label class="switch-row">
             <input id="toggleDistricts" type="checkbox" checked />
             <span class="switch" aria-hidden="true"></span>
-            <span>Tematik kabupaten/kota</span>
+            <span data-i18n="districtThematic">Tematik kabupaten/kota</span>
           </label>
         </fieldset>
 
         <div class="info-box">
           <span class="material-symbols-outlined" aria-hidden="true">info</span>
-          <p>Klik titik petir atau wilayah pada peta untuk melihat rincian atribut.</p>
+          <p data-i18n="filterHelp">Klik titik petir atau wilayah pada peta untuk melihat rincian atribut.</p>
         </div>
 
-        <button id="applyFilterButton" class="button filter-done-button" type="button">
+        <button id="applyFilterButton" class="button filter-done-button" type="button" data-i18n="applyFilter">
           Terapkan filter
         </button>
       </aside>
@@ -222,7 +258,7 @@
         <div class="map-toolbar">
           <div>
             <p class="eyebrow">WEB MAP</p>
-            <h2>Distribusi Spasial</h2>
+            <h2 data-i18n="spatialDistribution">Distribusi Spasial</h2>
           </div>
           <div class="map-actions">
             <button
@@ -233,18 +269,18 @@
               aria-expanded="false"
             >
               <span class="material-symbols-outlined" aria-hidden="true">tune</span>
-              Atur Filter
+              <span data-i18n="configureFilter">Atur Filter</span>
             </button>
             <button id="fitButton" class="button button-secondary" type="button">
               <span class="material-symbols-outlined" aria-hidden="true">fit_screen</span>
-              Semua Wilayah
+              <span data-i18n="allRegionsButton">Semua Wilayah</span>
             </button>
           </div>
         </div>
 
-        <div id="map" role="application" aria-label="Peta interaktif sambaran petir Jawa Timur"></div>
+        <div id="map" role="application" aria-label="Peta interaktif sambaran petir Jawa Timur" data-i18n-aria="mapAria"></div>
 
-        <p class="map-note">
+        <p class="map-note" data-i18n="mapNote">
           Peta menunjukkan sambaran yang terdeteksi pada periode pengamatan, bukan prediksi lokasi sambaran berikutnya.
         </p>
       </section>
@@ -253,21 +289,21 @@
     <section class="analysis-grid" id="analysisSection">
       <article class="chart-card">
         <div class="card-title">
-          <p class="eyebrow">ANALISIS TEMPORAL</p>
-          <h2>Sambaran Berdasarkan Waktu</h2>
+          <p class="eyebrow" data-i18n="temporalAnalysis">ANALISIS TEMPORAL</p>
+          <h2 data-i18n="strikesByTime">Sambaran Berdasarkan Waktu</h2>
         </div>
         <div class="chart-wrapper">
-          <canvas id="periodChart" aria-label="Grafik sambaran berdasarkan waktu"></canvas>
+          <canvas id="periodChart" aria-label="Grafik sambaran berdasarkan waktu" data-i18n-aria="periodChartAria"></canvas>
         </div>
       </article>
 
       <article class="chart-card">
         <div class="card-title">
-          <p class="eyebrow">POLARITAS</p>
-          <h2>Komposisi Sambaran</h2>
+          <p class="eyebrow" data-i18n="polarityCaps">POLARITAS</p>
+          <h2 data-i18n="strikeComposition">Komposisi Sambaran</h2>
         </div>
         <div class="chart-wrapper polarity-wrapper">
-          <canvas id="polarityChart" aria-label="Grafik komposisi polaritas sambaran"></canvas>
+          <canvas id="polarityChart" aria-label="Grafik komposisi polaritas sambaran" data-i18n-aria="polarityChartAria"></canvas>
         </div>
       </article>
     </section>
@@ -275,8 +311,8 @@
     <section class="table-card" id="summarySection">
       <div class="card-title table-title">
         <div>
-          <p class="eyebrow">RINGKASAN WILAYAH</p>
-          <h2>Top 10 Kabupaten/Kota</h2>
+          <p class="eyebrow" data-i18n="regionalSummary">RINGKASAN WILAYAH</p>
+          <h2 data-i18n="topTenRegions">Top 10 Kabupaten/Kota</h2>
         </div>
         <span class="material-symbols-outlined table-icon" aria-hidden="true">list_alt</span>
       </div>
@@ -285,44 +321,44 @@
         <table>
           <thead>
             <tr>
-              <th>Peringkat</th>
-              <th>Kabupaten/Kota</th>
-              <th>Dini Hari</th>
-              <th>Pagi</th>
-              <th>Siang-Sore</th>
-              <th>Malam</th>
-              <th>Total</th>
+              <th data-i18n="rank">Peringkat</th>
+              <th data-i18n="districtLabel">Kabupaten/Kota</th>
+              <th data-i18n="periodDawn">Dini Hari</th>
+              <th data-i18n="periodMorning">Pagi</th>
+              <th data-i18n="periodAfternoon">Siang-Sore</th>
+              <th data-i18n="periodEvening">Malam</th>
+              <th data-i18n="total">Total</th>
             </tr>
           </thead>
           <tbody id="districtTableBody"></tbody>
         </table>
       </div>
-      <p id="tableStatus" class="table-status">Sesuai filter aktif</p>
+      <p id="tableStatus" class="table-status" data-i18n="activeFilterStatus">Sesuai filter aktif</p>
     </section>
   </main>
 
   <footer>
     <strong>METEOROSYSTEMS</strong>
-    <p>© 2026 Meteorosystems. Sumber: Lightning Detector Stasiun Geofisika – BMKG.</p>
-    <p>Developed by Evan – WebGIS Developer</p>
+    <p data-i18n="footerSource">© 2026 Meteorosystems. Sumber: Lightning Detector Stasiun Geofisika – BMKG.</p>
+    <p data-i18n="footerDeveloper">Dikembangkan oleh Evan – WebGIS Developer</p>
   </footer>
 
-  <nav class="bottom-nav" aria-label="Navigasi cepat">
+  <nav class="bottom-nav" aria-label="Navigasi cepat" data-i18n-aria="quickNavigationAria">
     <a class="bottom-nav-item is-active" href="#top">
       <span class="material-symbols-outlined" aria-hidden="true">explore</span>
-      <span>Beranda</span>
+      <span data-i18n="home">Beranda</span>
     </a>
     <a class="bottom-nav-item" href="#analysisSection">
       <span class="material-symbols-outlined" aria-hidden="true">analytics</span>
-      <span>Analisis</span>
+      <span data-i18n="navAnalysis">Analisis</span>
     </a>
     <button id="bottomFilterButton" class="bottom-nav-item" type="button">
       <span class="material-symbols-outlined" aria-hidden="true">tune</span>
-      <span>Filter</span>
+      <span data-i18n="filterNav">Filter</span>
     </button>
     <a class="bottom-nav-item" href="#summarySection">
       <span class="material-symbols-outlined" aria-hidden="true">table_chart</span>
-      <span>Ringkasan</span>
+      <span data-i18n="navSummary">Ringkasan</span>
     </a>
   </nav>
 
@@ -332,6 +368,6 @@
     crossorigin=""
   ></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
-  <script src="app.js?v=light-20260718-2"></script>
+  <script src="app.js?v=light-20260718-3"></script>
 </body>
 </html>
