@@ -362,14 +362,22 @@ fieldset.filter-group {
 }
 
 .date-range-grid .filter-group {
+  width: 100%;
   min-width: 0;
+  max-width: 100%;
   margin-top: 0;
+}
+
+.date-field {
+  min-inline-size: 0;
 }
 
 input[type="date"],
 .district-search {
+  display: block;
   width: 100%;
   min-width: 0;
+  max-width: 100%;
   min-height: 42px;
   padding: 0 0.7rem;
   color: var(--text);
@@ -378,6 +386,39 @@ input[type="date"],
   outline: none;
   background: var(--surface);
   font-size: 0.78rem;
+}
+
+/* Menahan ukuran intrinsik date input Safari/iOS agar tidak keluar kolom. */
+.date-range-grid input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-align: center;
+  -webkit-min-logical-width: 0;
+}
+
+.date-range-grid input[type="date"]::-webkit-date-and-time-value {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.date-range-grid input[type="date"]::-webkit-datetime-edit,
+.date-range-grid input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  min-width: 0;
+  padding: 0;
+}
+
+.date-range-grid input[type="date"]::-webkit-calendar-picker-indicator {
+  flex: 0 0 auto;
+  width: 16px;
+  margin: 0;
+  padding: 0;
 }
 
 input[type="date"]:focus,
@@ -1169,6 +1210,12 @@ footer p {
   .district-search {
     min-height: 46px;
     font-size: 16px;
+  }
+
+  .date-range-grid input[type="date"] {
+    height: 46px;
+    padding-right: 0.45rem;
+    padding-left: 0.45rem;
   }
 
   .control-panel {
