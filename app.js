@@ -8,11 +8,12 @@ const DATA_PATHS = {
 
 const PERIODS = ['Dini Hari', 'Pagi', 'Siang-Sore', 'Malam'];
 
+/* Palet biru tenang agar peta tetap informatif tanpa terlihat ramai. */
 const PERIOD_COLORS = {
-  'Dini Hari': '#3b82f6',
-  'Pagi': '#22c55e',
-  'Siang-Sore': '#f59e0b',
-  'Malam': '#a855f7'
+  'Dini Hari': '#86a9f2',
+  'Pagi': '#5f87dd',
+  'Siang-Sore': '#1647b8',
+  'Malam': '#b3c4ec'
 };
 
 const PERIOD_SHORT = {
@@ -36,7 +37,7 @@ const state = {
   filterPanelOpen: false
 };
 
-const mobileLayoutQuery = window.matchMedia('(max-width: 820px)');
+const mobileLayoutQuery = window.matchMedia('(max-width: 1020px)');
 
 const elements = {
   loadingOverlay: document.getElementById('loadingOverlay'),
@@ -60,9 +61,10 @@ const elements = {
   togglePoints: document.getElementById('togglePoints'),
   toggleDistricts: document.getElementById('toggleDistricts'),
   districtTableBody: document.getElementById('districtTableBody'),
+  tableStatus: document.getElementById('tableStatus'),
   filterPanel: document.getElementById('filterPanel'),
   filterToggleButton: document.getElementById('filterToggleButton'),
-  closeFilterButton: document.getElementById('closeFilterButton'),
+  bottomFilterButton: document.getElementById('bottomFilterButton'),
   applyFilterButton: document.getElementById('applyFilterButton')
 };
 
@@ -72,6 +74,7 @@ function formatNumber(value, maximumFractionDigits = 0) {
 
 function formatDateID(value) {
   if (!value) return '–';
+
   return new Intl.DateTimeFormat('id-ID', {
     day: '2-digit',
     month: 'long',
@@ -90,6 +93,7 @@ function escapeHTML(value) {
 
 function normalizeDistrictName(value) {
   if (!value) return 'Tidak diketahui';
+
   return String(value)
     .replace(/^Kdy\.\s*/i, 'Kota ')
     .replace(/^Kodya\s*/i, 'Kota ')
@@ -98,9 +102,11 @@ function normalizeDistrictName(value) {
 
 async function fetchJSON(path) {
   const response = await fetch(path);
+
   if (!response.ok) {
     throw new Error(`Gagal membaca ${path}: HTTP ${response.status}`);
   }
+
   return response.json();
 }
 
@@ -110,13 +116,12 @@ function initializeMap() {
     preferCanvas: true
   }).setView([-7.65, 112.7], 7);
 
-  const darkBase = L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  const lightBase = L.tileLayer(
+    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
     {
       maxZoom: 20,
       subdomains: 'abcd',
-      attribution:
-        '&copy; OpenStreetMap contributors &copy; CARTO'
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
     }
   ).addTo(state.map);
 
@@ -130,7 +135,7 @@ function initializeMap() {
 
   L.control.layers(
     {
-      'Dark Matter': darkBase,
+      'Peta Terang': lightBase,
       'OpenStreetMap': osmBase
     },
     null,
@@ -142,31 +147,38 @@ function initializeMap() {
 
 function addMapLegends() {
   const periodLegend = L.control({ position: 'bottomleft' });
+
   periodLegend.onAdd = function () {
     const div = L.DomUtil.create('div', 'map-legend');
     div.innerHTML = `
       <strong>Periode Waktu</strong>
       ${PERIODS.map(period => `
-        <div><i style="background:${PERIOD_COLORS[period]};border-radius:50%;"></i>${PERIOD_SHORT[period]}</div>
+        <div>
+          <i style="background:${PERIOD_COLORS[period]};border-radius:50%;"></i>
+          ${PERIOD_SHORT[period]}
+        </div>
       `).join('')}
     `;
     return div;
   };
+
   periodLegend.addTo(state.map);
 
   const districtLegend = L.control({ position: 'bottomright' });
+
   districtLegend.onAdd = function () {
     const div = L.DomUtil.create('div', 'map-legend');
     div.innerHTML = `
       <strong>Jumlah Sambaran</strong>
-      <div><i style="background:#172f48"></i>0</div>
-      <div><i style="background:#245274"></i>1-5</div>
-      <div><i style="background:#287fa1"></i>6-10</div>
-      <div><i style="background:#21b6c7"></i>11-20</div>
-      <div><i style="background:#ffd166"></i>&gt;20</div>
+      <div><i style="background:#eef2ff"></i>0</div>
+      <div><i style="background:#dbe7ff"></i>1–5</div>
+      <div><i style="background:#a9c5ff"></i>6–10</div>
+      <div><i style="background:#5e8ee7"></i>11–20</div>
+      <div><i style="background:#1647b8"></i>&gt;20</div>
     `;
     return div;
   };
+
   districtLegend.addTo(state.map);
 }
 
@@ -182,7 +194,7 @@ function setupFilterInputs() {
   elements.endDate.value = maxDate;
 
   elements.periodLabel.textContent =
-    `${formatDateID(minDate)} - ${formatDateID(maxDate)} • ${formatNumber(state.metadata.jumlah_data)} data sambaran`;
+    `${formatDateID(minDate)} – ${formatDateID(maxDate)} • ${formatNumber(state.metadata.jumlah_data)} data sambaran`;
 
   const districts = [...new Set(
     state.pointsData.features
@@ -215,7 +227,6 @@ function setFilterPanelOpen(isOpen) {
     state.filterPanelOpen = true;
     elements.filterPanel.hidden = false;
     elements.filterToggleButton?.setAttribute('aria-expanded', 'true');
-    elements.filterToggleButton?.classList.add('is-active');
     return;
   }
 
@@ -225,10 +236,6 @@ function setFilterPanelOpen(isOpen) {
     'aria-expanded',
     String(state.filterPanelOpen)
   );
-  elements.filterToggleButton?.classList.toggle(
-    'is-active',
-    state.filterPanelOpen
-  );
 }
 
 function initializeFilterPanelLayout() {
@@ -237,6 +244,27 @@ function initializeFilterPanelLayout() {
 
 function handleLayoutBreakpointChange(event) {
   setFilterPanelOpen(!event.matches);
+
+  window.setTimeout(() => {
+    state.map?.invalidateSize();
+  }, 50);
+}
+
+function scrollToElement(element, offset = 12) {
+  if (!element) return;
+
+  const top = window.scrollY + element.getBoundingClientRect().top - offset;
+  window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+}
+
+function openFilterPanelAndScroll() {
+  setFilterPanelOpen(true);
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      scrollToElement(elements.filterPanel);
+    });
+  });
 }
 
 function bindEvents() {
@@ -285,60 +313,24 @@ function bindEvents() {
   });
 
   elements.resetButton.addEventListener('click', resetFilters);
-
-  elements.filterToggleButton?.addEventListener('click', () => {
-    // Tombol Atur Filter hanya membuka panel, tidak menutupnya.
-    setFilterPanelOpen(true);
-
-    // Setelah panel benar-benar muncul, arahkan pengguna langsung
-    // ke bagian filter tanpa menutup panel ketika halaman di-scroll.
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        const panelTop =
-          window.scrollY +
-          elements.filterPanel.getBoundingClientRect().top -
-          12;
-
-        window.scrollTo({
-          top: Math.max(panelTop, 0),
-          behavior: 'smooth'
-        });
-      });
-    });
-  });
+  elements.filterToggleButton?.addEventListener('click', openFilterPanelAndScroll);
+  elements.bottomFilterButton?.addEventListener('click', openFilterPanelAndScroll);
 
   elements.applyFilterButton?.addEventListener('click', () => {
     applyFilters();
     setFilterPanelOpen(false);
 
-    // Setelah pengguna selesai mengatur filter, arahkan kembali ke peta
-    // agar perubahan titik, wilayah, dan statistik langsung terlihat.
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        const mapSection = document.querySelector('.map-card');
-        if (!mapSection) return;
+        scrollToElement(document.querySelector('.map-card'));
 
-        const mapTop =
-          window.scrollY +
-          mapSection.getBoundingClientRect().top -
-          12;
-
-        window.scrollTo({
-          top: Math.max(mapTop, 0),
-          behavior: 'smooth'
-        });
-
-        // Pastikan ukuran Leaflet dihitung ulang setelah panel filter ditutup.
         window.setTimeout(() => {
           state.map?.invalidateSize();
-        }, 350);
+        }, 300);
       });
     });
   });
 
-  // Hanya bereaksi ketika benar-benar berpindah antara layout HP dan desktop.
-  // Scroll pada browser HP dapat mengubah tinggi viewport, tetapi tidak akan
-  // menutup panel filter lagi.
   if (typeof mobileLayoutQuery.addEventListener === 'function') {
     mobileLayoutQuery.addEventListener('change', handleLayoutBreakpointChange);
   } else {
@@ -366,9 +358,19 @@ function bindEvents() {
 
     if (elements.toggleDistricts.checked) {
       state.districtLayer.addTo(state.map);
+      state.districtLayer.bringToBack();
     } else {
       state.map.removeLayer(state.districtLayer);
     }
+  });
+
+  document.querySelectorAll('.bottom-nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.bottom-nav-item').forEach(navItem => {
+        navItem.classList.remove('is-active');
+      });
+      item.classList.add('is-active');
+    });
   });
 }
 
@@ -392,8 +394,7 @@ function updateDistrictSelectionSummary() {
   const selectedDistricts = getSelectedDistricts();
 
   if (selectedDistricts.includes('ALL')) {
-    elements.districtSelectionSummary.textContent =
-      'Semua wilayah dipilih';
+    elements.districtSelectionSummary.textContent = 'Semua wilayah dipilih';
     return;
   }
 
@@ -425,15 +426,10 @@ function filterDistrictOptions() {
       .trim()
       .toLocaleLowerCase('id-ID');
 
-    const isMatch =
-      keyword === '' ||
-      districtName.includes(keyword);
-
+    const isMatch = keyword === '' || districtName.includes(keyword);
     row.hidden = !isMatch;
 
-    if (isMatch) {
-      visibleCount += 1;
-    }
+    if (isMatch) visibleCount += 1;
   });
 
   if (elements.districtSearchEmpty) {
@@ -444,8 +440,16 @@ function filterDistrictOptions() {
 }
 
 function applyFilters() {
-  const startDate = elements.startDate.value;
-  const endDate = elements.endDate.value;
+  let startDate = elements.startDate.value;
+  let endDate = elements.endDate.value;
+
+  /* Mencegah rentang terbalik tanpa menghentikan dashboard. */
+  if (startDate && endDate && startDate > endDate) {
+    [startDate, endDate] = [endDate, startDate];
+    elements.startDate.value = startDate;
+    elements.endDate.value = endDate;
+  }
+
   const selectedDistricts = new Set(getSelectedDistricts());
   const periods = new Set(getSelectedValues('.period-filter'));
   const polarities = new Set(getSelectedValues('.polarity-filter'));
@@ -476,7 +480,7 @@ function applyFilters() {
 }
 
 function getPeriodColor(period) {
-  return PERIOD_COLORS[period] || '#ffffff';
+  return PERIOD_COLORS[period] || '#1647b8';
 }
 
 function pointPopupHTML(props) {
@@ -512,27 +516,24 @@ function renderPointLayer() {
 
   state.pointLayer = L.geoJSON(filteredCollection, {
     pointToLayer(feature, latlng) {
-      const props = feature.properties;
       return L.circleMarker(latlng, {
-        radius: 5.2,
-        weight: 1,
+        radius: 5,
+        weight: 1.2,
         color: '#ffffff',
-        opacity: 0.8,
-        fillColor: getPeriodColor(props.periode_waktu),
+        opacity: 0.92,
+        fillColor: getPeriodColor(feature.properties.periode_waktu),
         fillOpacity: 0.82
       });
     },
     onEachFeature(feature, layer) {
-      layer.bindPopup(pointPopupHTML(feature.properties), {
-        maxWidth: 320
-      });
+      layer.bindPopup(pointPopupHTML(feature.properties), { maxWidth: 320 });
 
       layer.on('mouseover', function () {
         this.setStyle({ radius: 7, weight: 2 });
       });
 
       layer.on('mouseout', function () {
-        this.setStyle({ radius: 5.2, weight: 1 });
+        this.setStyle({ radius: 5, weight: 1.2 });
       });
     }
   });
@@ -572,11 +573,11 @@ function aggregateFilteredByDistrict() {
 }
 
 function districtFillColor(count) {
-  if (count > 20) return '#ffd166';
-  if (count > 10) return '#21b6c7';
-  if (count > 5) return '#287fa1';
-  if (count > 0) return '#245274';
-  return '#172f48';
+  if (count > 20) return '#1647b8';
+  if (count > 10) return '#5e8ee7';
+  if (count > 5) return '#a9c5ff';
+  if (count > 0) return '#dbe7ff';
+  return '#eef2ff';
 }
 
 function renderDistrictLayer() {
@@ -590,12 +591,13 @@ function renderDistrictLayer() {
     style(feature) {
       const district = normalizeDistrictName(feature.properties.kabupaten);
       const count = aggregate.get(district)?.total || 0;
+
       return {
-        color: '#8bb0cb',
-        weight: 0.8,
-        opacity: 0.8,
+        color: '#7386a7',
+        weight: 0.85,
+        opacity: 0.72,
         fillColor: districtFillColor(count),
-        fillOpacity: 0.48
+        fillOpacity: 0.46
       };
     },
     onEachFeature(feature, layer) {
@@ -624,8 +626,8 @@ function renderDistrictLayer() {
         mouseover(event) {
           event.target.setStyle({
             weight: 2,
-            color: '#ffffff',
-            fillOpacity: 0.66
+            color: '#1647b8',
+            fillOpacity: 0.62
           });
           event.target.bringToFront();
         },
@@ -633,7 +635,10 @@ function renderDistrictLayer() {
           state.districtLayer.resetStyle(event.target);
         },
         click(event) {
-          state.map.fitBounds(event.target.getBounds(), { padding: [25, 25], maxZoom: 10 });
+          state.map.fitBounds(event.target.getBounds(), {
+            padding: [25, 25],
+            maxZoom: 10
+          });
         }
       });
     }
@@ -696,14 +701,47 @@ function updateDashboard() {
     elements.dominantPeriod.textContent = 'Tidak ada data';
     elements.dominantPeriodDetail.textContent = 'Ubah filter untuk menampilkan data';
     elements.topDistrict.textContent = 'Tidak ada data';
-    elements.topDistrictDetail.textContent = '-';
+    elements.topDistrictDetail.textContent = '–';
     elements.averageCurrent.textContent = '0 kA';
   }
 }
 
+const polarityCenterPlugin = {
+  id: 'polarityCenterText',
+  afterDatasetsDraw(chart) {
+    if (chart.canvas.id !== 'polarityChart') return;
+
+    const values = chart.data.datasets[0].data.map(Number);
+    const total = values.reduce((sum, value) => sum + value, 0);
+    const negativePercentage = total ? (values[0] / total) * 100 : 0;
+    const { ctx, chartArea } = chart;
+
+    if (!chartArea) return;
+
+    const centerX = (chartArea.left + chartArea.right) / 2;
+    const centerY = (chartArea.top + chartArea.bottom) / 2;
+
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#20212a';
+    ctx.font = '700 18px Inter, sans-serif';
+    ctx.fillText(`${formatNumber(negativePercentage, 0)}%`, centerX, centerY - 5);
+    ctx.fillStyle = '#777c8d';
+    ctx.font = '700 9px Inter, sans-serif';
+    ctx.fillText('NEGATIF', centerX, centerY + 14);
+    ctx.restore();
+  }
+};
+
 function buildCharts() {
-  const textColor = '#cbd9e8';
-  const gridColor = 'rgba(151, 181, 212, 0.12)';
+  Chart.register(polarityCenterPlugin);
+
+  const textColor = '#666b7b';
+  const gridColor = 'rgba(96, 105, 126, 0.12)';
+
+  Chart.defaults.font.family = 'Inter, sans-serif';
+  Chart.defaults.color = textColor;
 
   state.periodChart = new Chart(document.getElementById('periodChart'), {
     type: 'bar',
@@ -712,22 +750,22 @@ function buildCharts() {
       datasets: [{
         label: 'Jumlah Sambaran',
         data: [0, 0, 0, 0],
-        backgroundColor: [
-          PERIOD_COLORS['Dini Hari'],
-          PERIOD_COLORS['Pagi'],
-          PERIOD_COLORS['Siang-Sore'],
-          PERIOD_COLORS['Malam']
-        ],
-        borderRadius: 8,
-        borderSkipped: false
+        backgroundColor: PERIODS.map(period => PERIOD_COLORS[period]),
+        borderRadius: 6,
+        borderSkipped: false,
+        maxBarThickness: 54
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: { duration: 500 },
       plugins: {
         legend: { display: false },
         tooltip: {
+          displayColors: false,
+          backgroundColor: '#20212a',
+          titleFont: { weight: '600' },
           callbacks: {
             label(context) {
               return `${formatNumber(context.raw)} sambaran`;
@@ -737,13 +775,22 @@ function buildCharts() {
       },
       scales: {
         x: {
-          ticks: { color: textColor },
-          grid: { display: false }
+          ticks: {
+            color: textColor,
+            font: { size: 10, weight: '600' }
+          },
+          grid: { display: false },
+          border: { display: false }
         },
         y: {
           beginAtZero: true,
-          ticks: { color: textColor, precision: 0 },
-          grid: { color: gridColor }
+          ticks: {
+            color: textColor,
+            precision: 0,
+            font: { size: 10 }
+          },
+          grid: { color: gridColor },
+          border: { display: false }
         }
       }
     }
@@ -755,26 +802,33 @@ function buildCharts() {
       labels: ['Negatif (-)', 'Positif (+)', 'Lainnya'],
       datasets: [{
         data: [0, 0, 0],
-        backgroundColor: ['#20c7ff', '#ffc247', '#60758c'],
-        borderColor: '#0a1828',
-        borderWidth: 4,
-        hoverOffset: 5
+        backgroundColor: ['#1647b8', '#d8e2ff', '#a7adba'],
+        borderColor: '#ffffff',
+        borderWidth: 3,
+        hoverOffset: 4
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutout: '65%',
+      cutout: '68%',
+      animation: { duration: 500 },
+      layout: { padding: 8 },
       plugins: {
         legend: {
-          position: 'bottom',
+          position: 'right',
           labels: {
             color: textColor,
-            padding: 18,
-            usePointStyle: true
+            boxWidth: 9,
+            boxHeight: 9,
+            padding: 16,
+            usePointStyle: true,
+            pointStyle: 'circle',
+            font: { size: 10, weight: '600' }
           }
         },
         tooltip: {
+          backgroundColor: '#20212a',
           callbacks: {
             label(context) {
               const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -825,6 +879,10 @@ function updateDistrictTable() {
     .sort((a, b) => b.total - a.total)
     .slice(0, 10);
 
+  elements.tableStatus.textContent = rows.length
+    ? `Menampilkan ${rows.length} wilayah teratas • sesuai filter aktif`
+    : 'Tidak ada data yang sesuai dengan filter';
+
   if (rows.length === 0) {
     elements.districtTableBody.innerHTML = `
       <tr>
@@ -862,10 +920,7 @@ function zoomToSelectedDistricts() {
   let singleSelectedLayer = null;
 
   state.districtLayer.eachLayer(layer => {
-    const district = normalizeDistrictName(
-      layer.feature.properties.kabupaten
-    );
-
+    const district = normalizeDistrictName(layer.feature.properties.kabupaten);
     if (!selectedSet.has(district)) return;
 
     combinedBounds.extend(layer.getBounds());
@@ -891,10 +946,9 @@ function resetFilters() {
   elements.startDate.value = state.metadata.periode_mulai;
   elements.endDate.value = state.metadata.periode_selesai;
 
-  document.querySelectorAll('.district-filter')
-    .forEach(input => {
-      input.checked = input.value === 'ALL';
-    });
+  document.querySelectorAll('.district-filter').forEach(input => {
+    input.checked = input.value === 'ALL';
+  });
 
   updateDistrictSelectionSummary();
 
@@ -903,8 +957,9 @@ function resetFilters() {
     filterDistrictOptions();
   }
 
-  document.querySelectorAll('.period-filter, .polarity-filter')
-    .forEach(input => { input.checked = true; });
+  document.querySelectorAll('.period-filter, .polarity-filter').forEach(input => {
+    input.checked = true;
+  });
 
   elements.togglePoints.checked = true;
   elements.toggleDistricts.checked = true;
@@ -947,7 +1002,7 @@ async function initialize() {
       <div>
         <h2>Data gagal dimuat</h2>
         <p>${escapeHTML(error.message)}</p>
-        <p>Jalankan project melalui local server, bukan dengan membuka file index.html langsung.</p>
+        <p>Jalankan project melalui local server, bukan dengan membuka index.html langsung.</p>
       </div>
     `;
   }
