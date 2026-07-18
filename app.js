@@ -16,11 +16,216 @@ const PERIOD_COLORS = {
   'Malam': '#b3c4ec'
 };
 
-const PERIOD_SHORT = {
-  'Dini Hari': 'Dini Hari',
-  'Pagi': 'Pagi',
-  'Siang-Sore': 'Siang-Sore',
-  'Malam': 'Malam'
+const PERIOD_TRANSLATION_KEYS = {
+  'Dini Hari': 'periodDawn',
+  'Pagi': 'periodMorning',
+  'Siang-Sore': 'periodAfternoon',
+  'Malam': 'periodEvening'
+};
+
+const TRANSLATIONS = {
+  id: {
+    pageTitle: 'ThunderPulse | Monitoring Sambaran Petir Jawa Timur',
+    loading: 'Memuat data spasial...',
+    brandHomeAria: 'ThunderPulse, kembali ke atas',
+    mainNavigationAria: 'Navigasi utama',
+    languageButtonAria: 'Pilih bahasa',
+    languageMenuAria: 'Pilihan bahasa',
+    navMap: 'Peta',
+    navAnalysis: 'Analisis',
+    navSummary: 'Ringkasan',
+    heroEyebrow: 'MONITORING SAMBARAN PETIR',
+    dashboardTitle: 'Jawa Timur Dashboard',
+    loadingPeriod: 'Memuat periode data...',
+    statsAria: 'Ringkasan statistik',
+    totalStrikesLabel: 'TOTAL SAMBARAN',
+    activeFilter: 'Filter aktif',
+    dominantPeriodLabel: 'PERIODE DOMINAN',
+    topRegionLabel: 'WILAYAH TERBANYAK',
+    averageCurrentLabel: 'RATA-RATA ARUS',
+    absoluteValue: 'Nilai absolut',
+    workspaceAria: 'Peta dan filter data',
+    filterEyebrow: 'FILTER DATA',
+    filterTitle: 'Atur tampilan peta',
+    reset: 'Reset',
+    dateRangeAria: 'Rentang tanggal',
+    startDate: 'Tanggal mulai',
+    endDate: 'Tanggal selesai',
+    districtLabel: 'Kabupaten/Kota',
+    districtGroupAria: 'Pilih satu atau beberapa kabupaten atau kota',
+    districtSearchPlaceholder: 'Cari kabupaten/kota...',
+    districtSearchAria: 'Cari kabupaten atau kota',
+    allRegions: 'Semua wilayah',
+    districtListAria: 'Daftar kabupaten dan kota',
+    districtNotFound: 'Wilayah tidak ditemukan.',
+    timePeriod: 'Periode waktu',
+    periodDawn: 'Dini Hari',
+    periodMorning: 'Pagi',
+    periodAfternoon: 'Siang-Sore',
+    periodEvening: 'Malam',
+    polarity: 'Polaritas',
+    negativePolarity: 'Negatif (-)',
+    positivePolarity: 'Positif (+)',
+    layers: 'Layer',
+    strikePoints: 'Titik sambaran',
+    districtThematic: 'Tematik kabupaten/kota',
+    filterHelp: 'Klik titik petir atau wilayah pada peta untuk melihat rincian atribut.',
+    applyFilter: 'Terapkan filter',
+    spatialDistribution: 'Distribusi Spasial',
+    configureFilter: 'Atur Filter',
+    allRegionsButton: 'Semua Wilayah',
+    mapAria: 'Peta interaktif sambaran petir Jawa Timur',
+    mapNote: 'Peta menunjukkan sambaran yang terdeteksi pada periode pengamatan, bukan prediksi lokasi sambaran berikutnya.',
+    temporalAnalysis: 'ANALISIS TEMPORAL',
+    strikesByTime: 'Sambaran Berdasarkan Waktu',
+    periodChartAria: 'Grafik sambaran berdasarkan waktu',
+    polarityCaps: 'POLARITAS',
+    strikeComposition: 'Komposisi Sambaran',
+    polarityChartAria: 'Grafik komposisi polaritas sambaran',
+    regionalSummary: 'RINGKASAN WILAYAH',
+    topTenRegions: 'Top 10 Kabupaten/Kota',
+    rank: 'Peringkat',
+    total: 'Total',
+    activeFilterStatus: 'Sesuai filter aktif',
+    footerSource: '© 2026 Meteorosystems. Sumber: Lightning Detector Stasiun Geofisika – BMKG.',
+    footerDeveloper: 'Dikembangkan oleh Evan – WebGIS Developer',
+    quickNavigationAria: 'Navigasi cepat',
+    home: 'Beranda',
+    filterNav: 'Filter',
+    lightMap: 'Peta Terang',
+    periodLegendTitle: 'Periode Waktu',
+    strikeLegendTitle: 'Jumlah Sambaran',
+    allRegionsSelected: 'Semua wilayah dipilih',
+    oneRegionSelected: '1 wilayah dipilih: {region}',
+    manyRegionsSelected: '{count} wilayah dipilih',
+    unknown: 'Tidak diketahui',
+    pointPopupTitle: 'Sambaran Petir Cloud-to-Ground',
+    date: 'Tanggal',
+    time: 'Waktu',
+    period: 'Periode',
+    regency: 'Kabupaten/Kota',
+    subdistrict: 'Kecamatan',
+    village: 'Desa/Kel.',
+    current: 'Arus',
+    totalFilter: 'Total filter',
+    area: 'Luas',
+    strikeSingular: 'sambaran',
+    strikePlural: 'sambaran',
+    dataSummary: '{start} – {end} • {count} data sambaran',
+    noData: 'Tidak ada data',
+    adjustFilter: 'Ubah filter untuk menampilkan data',
+    negativeCaps: 'NEGATIF',
+    chartStrikeCount: 'Jumlah Sambaran',
+    negativeLabel: 'Negatif (-)',
+    positiveLabel: 'Positif (+)',
+    otherLabel: 'Lainnya',
+    tableStatus: 'Menampilkan {count} wilayah teratas • sesuai filter aktif',
+    tableEmpty: 'Tidak ada data yang sesuai dengan filter.',
+    loadFailed: 'Data gagal dimuat',
+    localServerHelp: 'Jalankan project melalui local server, bukan dengan membuka index.html langsung.',
+    loadFileFailed: 'Gagal membaca {path}: HTTP {status}'
+  },
+  en: {
+    pageTitle: 'ThunderPulse | East Java Lightning Monitoring',
+    loading: 'Loading spatial data...',
+    brandHomeAria: 'ThunderPulse, back to top',
+    mainNavigationAria: 'Main navigation',
+    languageButtonAria: 'Select language',
+    languageMenuAria: 'Language options',
+    navMap: 'Map',
+    navAnalysis: 'Analysis',
+    navSummary: 'Summary',
+    heroEyebrow: 'LIGHTNING STRIKE MONITORING',
+    dashboardTitle: 'East Java Dashboard',
+    loadingPeriod: 'Loading data period...',
+    statsAria: 'Statistical summary',
+    totalStrikesLabel: 'TOTAL STRIKES',
+    activeFilter: 'Active filter',
+    dominantPeriodLabel: 'DOMINANT PERIOD',
+    topRegionLabel: 'TOP REGION',
+    averageCurrentLabel: 'AVERAGE CURRENT',
+    absoluteValue: 'Absolute value',
+    workspaceAria: 'Map and data filters',
+    filterEyebrow: 'DATA FILTERS',
+    filterTitle: 'Configure map display',
+    reset: 'Reset',
+    dateRangeAria: 'Date range',
+    startDate: 'Start date',
+    endDate: 'End date',
+    districtLabel: 'Regency/City',
+    districtGroupAria: 'Select one or more regencies or cities',
+    districtSearchPlaceholder: 'Search regency/city...',
+    districtSearchAria: 'Search for a regency or city',
+    allRegions: 'All regions',
+    districtListAria: 'List of regencies and cities',
+    districtNotFound: 'Region not found.',
+    timePeriod: 'Time period',
+    periodDawn: 'Early Morning',
+    periodMorning: 'Morning',
+    periodAfternoon: 'Afternoon',
+    periodEvening: 'Evening',
+    polarity: 'Polarity',
+    negativePolarity: 'Negative (-)',
+    positivePolarity: 'Positive (+)',
+    layers: 'Layers',
+    strikePoints: 'Strike points',
+    districtThematic: 'Regency/city thematic layer',
+    filterHelp: 'Select a lightning point or region on the map to view its attributes.',
+    applyFilter: 'Apply filters',
+    spatialDistribution: 'Spatial Distribution',
+    configureFilter: 'Filters',
+    allRegionsButton: 'All Regions',
+    mapAria: 'Interactive map of lightning strikes in East Java',
+    mapNote: 'The map shows strikes detected during the observation period and does not predict the location of future strikes.',
+    temporalAnalysis: 'TEMPORAL ANALYSIS',
+    strikesByTime: 'Lightning Strikes by Time',
+    periodChartAria: 'Chart of lightning strikes by time',
+    polarityCaps: 'POLARITY',
+    strikeComposition: 'Strike Composition',
+    polarityChartAria: 'Chart of lightning strike polarity composition',
+    regionalSummary: 'REGIONAL SUMMARY',
+    topTenRegions: 'Top 10 Regencies/Cities',
+    rank: 'Rank',
+    total: 'Total',
+    activeFilterStatus: 'Based on active filters',
+    footerSource: '© 2026 Meteorosystems. Source: Lightning Detector, Geophysical Station – BMKG.',
+    footerDeveloper: 'Developed by Evan – WebGIS Developer',
+    quickNavigationAria: 'Quick navigation',
+    home: 'Home',
+    filterNav: 'Filters',
+    lightMap: 'Light Map',
+    periodLegendTitle: 'Time Period',
+    strikeLegendTitle: 'Number of Strikes',
+    allRegionsSelected: 'All regions selected',
+    oneRegionSelected: '1 region selected: {region}',
+    manyRegionsSelected: '{count} regions selected',
+    unknown: 'Unknown',
+    pointPopupTitle: 'Cloud-to-Ground Lightning Strike',
+    date: 'Date',
+    time: 'Time',
+    period: 'Period',
+    regency: 'Regency/City',
+    subdistrict: 'District',
+    village: 'Village',
+    current: 'Current',
+    totalFilter: 'Filtered total',
+    area: 'Area',
+    strikeSingular: 'strike',
+    strikePlural: 'strikes',
+    dataSummary: '{start} – {end} • {count} strike records',
+    noData: 'No data',
+    adjustFilter: 'Adjust the filters to display data',
+    negativeCaps: 'NEGATIVE',
+    chartStrikeCount: 'Number of Strikes',
+    negativeLabel: 'Negative (-)',
+    positiveLabel: 'Positive (+)',
+    otherLabel: 'Other',
+    tableStatus: 'Showing the top {count} regions • based on active filters',
+    tableEmpty: 'No data matches the selected filters.',
+    loadFailed: 'Unable to load data',
+    localServerHelp: 'Run the project through a local server instead of opening index.html directly.',
+    loadFileFailed: 'Unable to read {path}: HTTP {status}'
+  }
 };
 
 const state = {
@@ -34,7 +239,14 @@ const state = {
   periodChart: null,
   polarityChart: null,
   provinceBounds: null,
-  filterPanelOpen: false
+  filterPanelOpen: false,
+  language: 'id',
+  districtNames: [],
+  lightBase: null,
+  osmBase: null,
+  layerControl: null,
+  periodLegendElement: null,
+  districtLegendElement: null
 };
 
 const mobileLayoutQuery = window.matchMedia('(max-width: 1020px)');
@@ -65,21 +277,155 @@ const elements = {
   filterPanel: document.getElementById('filterPanel'),
   filterToggleButton: document.getElementById('filterToggleButton'),
   bottomFilterButton: document.getElementById('bottomFilterButton'),
-  applyFilterButton: document.getElementById('applyFilterButton')
+  applyFilterButton: document.getElementById('applyFilterButton'),
+  languageToggle: document.getElementById('languageToggle'),
+  languageMenu: document.getElementById('languageMenu'),
+  languageCode: document.getElementById('languageCode')
 };
 
+function t(key, variables = {}) {
+  const dictionary = TRANSLATIONS[state.language] || TRANSLATIONS.id;
+  const fallback = TRANSLATIONS.id[key] ?? key;
+  const template = dictionary[key] ?? fallback;
+
+  return Object.entries(variables).reduce(
+    (text, [name, value]) => text.replaceAll(`{${name}}`, String(value)),
+    template
+  );
+}
+
+function currentLocale() {
+  return state.language === 'en' ? 'en-US' : 'id-ID';
+}
+
+function displayPeriod(period) {
+  const key = PERIOD_TRANSLATION_KEYS[period];
+  return key ? t(key) : period;
+}
+
+function displayDistrictName(district) {
+  if (!district || district === 'Tidak diketahui') return t('unknown');
+
+  if (state.language === 'en' && district.startsWith('Kota ')) {
+    return `${district.slice(5)} City`;
+  }
+
+  return district;
+}
+
+function strikeText(count) {
+  const unit = count === 1 ? t('strikeSingular') : t('strikePlural');
+  return `${formatNumber(count)} ${unit}`;
+}
+
 function formatNumber(value, maximumFractionDigits = 0) {
-  return new Intl.NumberFormat('id-ID', { maximumFractionDigits }).format(value);
+  return new Intl.NumberFormat(currentLocale(), { maximumFractionDigits }).format(value);
 }
 
 function formatDateID(value) {
   if (!value) return '–';
 
-  return new Intl.DateTimeFormat('id-ID', {
+  return new Intl.DateTimeFormat(currentLocale(), {
     day: '2-digit',
     month: 'long',
     year: 'numeric'
   }).format(new Date(`${value}T00:00:00`));
+}
+
+function translateStaticContent() {
+  document.documentElement.lang = state.language;
+  document.title = t('pageTitle');
+
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    element.textContent = t(element.dataset.i18n);
+  });
+
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+    element.placeholder = t(element.dataset.i18nPlaceholder);
+  });
+
+  document.querySelectorAll('[data-i18n-aria]').forEach(element => {
+    element.setAttribute('aria-label', t(element.dataset.i18nAria));
+  });
+}
+
+function setLanguageMenuOpen(isOpen) {
+  if (!elements.languageMenu || !elements.languageToggle) return;
+
+  elements.languageMenu.hidden = !isOpen;
+  elements.languageToggle.classList.toggle('is-open', isOpen);
+  elements.languageToggle.setAttribute('aria-expanded', String(isOpen));
+}
+
+function updateLanguageControl() {
+  elements.languageCode.textContent = state.language.toUpperCase();
+
+  document.querySelectorAll('.language-option').forEach(option => {
+    const selected = option.dataset.language === state.language;
+    option.classList.toggle('is-selected', selected);
+    option.setAttribute('aria-checked', String(selected));
+  });
+}
+
+function updatePeriodSummary() {
+  if (!state.metadata) return;
+
+  elements.periodLabel.textContent = t('dataSummary', {
+    start: formatDateID(state.metadata.periode_mulai),
+    end: formatDateID(state.metadata.periode_selesai),
+    count: formatNumber(state.metadata.jumlah_data)
+  });
+}
+
+function renderDistrictOptions() {
+  if (!elements.districtOptions) return;
+
+  const selectedDistricts = new Set(getSelectedDistricts());
+
+  elements.districtOptions.innerHTML = state.districtNames.map(district => `
+    <label class="district-option">
+      <input
+        class="district-filter"
+        type="checkbox"
+        value="${escapeHTML(district)}"
+        ${selectedDistricts.has(district) ? 'checked' : ''}
+      />
+      <span>${escapeHTML(displayDistrictName(district))}</span>
+    </label>
+  `).join('');
+
+  filterDistrictOptions();
+}
+
+function updateChartLanguage() {
+  if (!state.periodChart || !state.polarityChart) return;
+
+  state.periodChart.data.labels = PERIODS.map(displayPeriod);
+  state.periodChart.data.datasets[0].label = t('chartStrikeCount');
+  state.polarityChart.data.labels = [
+    t('negativeLabel'),
+    t('positiveLabel'),
+    t('otherLabel')
+  ];
+}
+
+function setLanguage(language) {
+  state.language = language === 'en' ? 'en' : 'id';
+
+  translateStaticContent();
+  updateLanguageControl();
+  setLanguageMenuOpen(false);
+  renderLayerControl();
+  renderMapLegends();
+
+  if (!state.metadata) return;
+
+  elements.districtSearch.value = '';
+  renderDistrictOptions();
+  updateDistrictSelectionSummary();
+  updatePeriodSummary();
+  updateChartLanguage();
+  applyFilters();
 }
 
 function escapeHTML(value) {
@@ -104,7 +450,7 @@ async function fetchJSON(path) {
   const response = await fetch(path);
 
   if (!response.ok) {
-    throw new Error(`Gagal membaca ${path}: HTTP ${response.status}`);
+    throw new Error(t('loadFileFailed', { path, status: response.status }));
   }
 
   return response.json();
@@ -116,7 +462,7 @@ function initializeMap() {
     preferCanvas: true
   }).setView([-7.65, 112.7], 7);
 
-  const lightBase = L.tileLayer(
+  state.lightBase = L.tileLayer(
     'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
     {
       maxZoom: 20,
@@ -125,7 +471,7 @@ function initializeMap() {
     }
   ).addTo(state.map);
 
-  const osmBase = L.tileLayer(
+  state.osmBase = L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
       maxZoom: 19,
@@ -133,16 +479,50 @@ function initializeMap() {
     }
   );
 
-  L.control.layers(
+  renderLayerControl();
+  addMapLegends();
+}
+
+function renderLayerControl() {
+  if (!state.map || !state.lightBase || !state.osmBase) return;
+
+  if (state.layerControl) {
+    state.map.removeControl(state.layerControl);
+  }
+
+  state.layerControl = L.control.layers(
     {
-      'Peta Terang': lightBase,
-      'OpenStreetMap': osmBase
+      [t('lightMap')]: state.lightBase,
+      OpenStreetMap: state.osmBase
     },
     null,
     { collapsed: true }
   ).addTo(state.map);
+}
 
-  addMapLegends();
+function renderMapLegends() {
+  if (state.periodLegendElement) {
+    state.periodLegendElement.innerHTML = `
+      <strong>${t('periodLegendTitle')}</strong>
+      ${PERIODS.map(period => `
+        <div>
+          <i style="background:${PERIOD_COLORS[period]};border-radius:50%;"></i>
+          ${escapeHTML(displayPeriod(period))}
+        </div>
+      `).join('')}
+    `;
+  }
+
+  if (state.districtLegendElement) {
+    state.districtLegendElement.innerHTML = `
+      <strong>${t('strikeLegendTitle')}</strong>
+      <div><i style="background:#eef2ff"></i>0</div>
+      <div><i style="background:#dbe7ff"></i>1–5</div>
+      <div><i style="background:#a9c5ff"></i>6–10</div>
+      <div><i style="background:#5e8ee7"></i>11–20</div>
+      <div><i style="background:#1647b8"></i>&gt;20</div>
+    `;
+  }
 }
 
 function addMapLegends() {
@@ -150,15 +530,7 @@ function addMapLegends() {
 
   periodLegend.onAdd = function () {
     const div = L.DomUtil.create('div', 'map-legend');
-    div.innerHTML = `
-      <strong>Periode Waktu</strong>
-      ${PERIODS.map(period => `
-        <div>
-          <i style="background:${PERIOD_COLORS[period]};border-radius:50%;"></i>
-          ${PERIOD_SHORT[period]}
-        </div>
-      `).join('')}
-    `;
+    state.periodLegendElement = div;
     return div;
   };
 
@@ -168,18 +540,12 @@ function addMapLegends() {
 
   districtLegend.onAdd = function () {
     const div = L.DomUtil.create('div', 'map-legend');
-    div.innerHTML = `
-      <strong>Jumlah Sambaran</strong>
-      <div><i style="background:#eef2ff"></i>0</div>
-      <div><i style="background:#dbe7ff"></i>1–5</div>
-      <div><i style="background:#a9c5ff"></i>6–10</div>
-      <div><i style="background:#5e8ee7"></i>11–20</div>
-      <div><i style="background:#1647b8"></i>&gt;20</div>
-    `;
+    state.districtLegendElement = div;
     return div;
   };
 
   districtLegend.addTo(state.map);
+  renderMapLegends();
 }
 
 function setupFilterInputs() {
@@ -193,26 +559,15 @@ function setupFilterInputs() {
   elements.startDate.value = minDate;
   elements.endDate.value = maxDate;
 
-  elements.periodLabel.textContent =
-    `${formatDateID(minDate)} – ${formatDateID(maxDate)} • ${formatNumber(state.metadata.jumlah_data)} data sambaran`;
+  updatePeriodSummary();
 
-  const districts = [...new Set(
+  state.districtNames = [...new Set(
     state.pointsData.features
       .map(feature => normalizeDistrictName(feature.properties.kabupaten))
       .filter(name => name !== 'Tidak diketahui')
-  )].sort((a, b) => a.localeCompare(b, 'id'));
+  )].sort((a, b) => a.localeCompare(b, currentLocale()));
 
-  elements.districtOptions.innerHTML = districts.map(district => `
-    <label class="district-option">
-      <input
-        class="district-filter"
-        type="checkbox"
-        value="${escapeHTML(district)}"
-      />
-      <span>${escapeHTML(district)}</span>
-    </label>
-  `).join('');
-
+  renderDistrictOptions();
   updateDistrictSelectionSummary();
 }
 
@@ -268,6 +623,26 @@ function openFilterPanelAndScroll() {
 }
 
 function bindEvents() {
+  elements.languageToggle?.addEventListener('click', event => {
+    event.stopPropagation();
+    setLanguageMenuOpen(elements.languageMenu.hidden);
+  });
+
+  elements.languageMenu?.addEventListener('click', event => {
+    event.stopPropagation();
+    const option = event.target.closest('.language-option');
+    if (!option) return;
+    setLanguage(option.dataset.language);
+  });
+
+  document.addEventListener('click', () => setLanguageMenuOpen(false));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      setLanguageMenuOpen(false);
+      elements.languageToggle?.focus();
+    }
+  });
+
   const filterControls = [
     elements.startDate,
     elements.endDate,
@@ -394,18 +769,20 @@ function updateDistrictSelectionSummary() {
   const selectedDistricts = getSelectedDistricts();
 
   if (selectedDistricts.includes('ALL')) {
-    elements.districtSelectionSummary.textContent = 'Semua wilayah dipilih';
+    elements.districtSelectionSummary.textContent = t('allRegionsSelected');
     return;
   }
 
   if (selectedDistricts.length === 1) {
-    elements.districtSelectionSummary.textContent =
-      `1 wilayah dipilih: ${selectedDistricts[0]}`;
+    elements.districtSelectionSummary.textContent = t('oneRegionSelected', {
+      region: displayDistrictName(selectedDistricts[0])
+    });
     return;
   }
 
-  elements.districtSelectionSummary.textContent =
-    `${selectedDistricts.length} wilayah dipilih`;
+  elements.districtSelectionSummary.textContent = t('manyRegionsSelected', {
+    count: formatNumber(selectedDistricts.length)
+  });
 }
 
 function filterDistrictOptions() {
@@ -413,7 +790,7 @@ function filterDistrictOptions() {
 
   const keyword = elements.districtSearch.value
     .trim()
-    .toLocaleLowerCase('id-ID');
+    .toLocaleLowerCase(currentLocale());
 
   const districtRows = [
     ...elements.districtOptions.querySelectorAll('.district-option')
@@ -424,7 +801,7 @@ function filterDistrictOptions() {
   districtRows.forEach(row => {
     const districtName = row.textContent
       .trim()
-      .toLocaleLowerCase('id-ID');
+      .toLocaleLowerCase(currentLocale());
 
     const isMatch = keyword === '' || districtName.includes(keyword);
     row.hidden = !isMatch;
@@ -490,16 +867,16 @@ function pointPopupHTML(props) {
     : `${String(Math.round(Number(props.jam) || 0)).padStart(2, '0')}:00`;
 
   return `
-    <div class="popup-title">Sambaran Petir Cloud-to-Ground</div>
+    <div class="popup-title">${t('pointPopupTitle')}</div>
     <dl class="popup-grid">
-      <dt>Tanggal</dt><dd>${escapeHTML(dateText)}</dd>
-      <dt>Waktu</dt><dd>${escapeHTML(timeText)} WIB</dd>
-      <dt>Periode</dt><dd>${escapeHTML(PERIOD_SHORT[props.periode_waktu] || props.periode_waktu)}</dd>
-      <dt>Kabupaten</dt><dd>${escapeHTML(normalizeDistrictName(props.kabupaten))}</dd>
-      <dt>Kecamatan</dt><dd>${escapeHTML(props.kecamatan)}</dd>
-      <dt>Desa/Kel.</dt><dd>${escapeHTML(props.desa_kelurahan)}</dd>
-      <dt>Polaritas</dt><dd>${escapeHTML(props.polaritas)}</dd>
-      <dt>Arus</dt><dd>${formatNumber(Number(props.arus_abs_ka) || 0, 2)} kA</dd>
+      <dt>${t('date')}</dt><dd>${escapeHTML(dateText)}</dd>
+      <dt>${t('time')}</dt><dd>${escapeHTML(timeText)} WIB</dd>
+      <dt>${t('period')}</dt><dd>${escapeHTML(displayPeriod(props.periode_waktu))}</dd>
+      <dt>${t('regency')}</dt><dd>${escapeHTML(displayDistrictName(normalizeDistrictName(props.kabupaten)))}</dd>
+      <dt>${t('subdistrict')}</dt><dd>${escapeHTML(props.kecamatan)}</dd>
+      <dt>${t('village')}</dt><dd>${escapeHTML(props.desa_kelurahan)}</dd>
+      <dt>${t('polarity')}</dt><dd>${escapeHTML(props.polaritas)}</dd>
+      <dt>${t('current')}</dt><dd>${formatNumber(Number(props.arus_abs_ka) || 0, 2)} kA</dd>
     </dl>
   `;
 }
@@ -611,14 +988,14 @@ function renderDistrictLayer() {
       };
 
       layer.bindPopup(`
-        <div class="popup-title">${escapeHTML(district)}</div>
+        <div class="popup-title">${escapeHTML(displayDistrictName(district))}</div>
         <dl class="popup-grid">
-          <dt>Total filter</dt><dd>${formatNumber(row.total)} sambaran</dd>
-          <dt>Dini Hari</dt><dd>${formatNumber(row['Dini Hari'])}</dd>
-          <dt>Pagi</dt><dd>${formatNumber(row['Pagi'])}</dd>
-          <dt>Siang-Sore</dt><dd>${formatNumber(row['Siang-Sore'])}</dd>
-          <dt>Malam</dt><dd>${formatNumber(row['Malam'])}</dd>
-          <dt>Luas</dt><dd>${formatNumber(Number(feature.properties.luas_km2) || 0, 2)} km²</dd>
+          <dt>${t('totalFilter')}</dt><dd>${strikeText(row.total)}</dd>
+          <dt>${t('periodDawn')}</dt><dd>${formatNumber(row['Dini Hari'])}</dd>
+          <dt>${t('periodMorning')}</dt><dd>${formatNumber(row['Pagi'])}</dd>
+          <dt>${t('periodAfternoon')}</dt><dd>${formatNumber(row['Siang-Sore'])}</dd>
+          <dt>${t('periodEvening')}</dt><dd>${formatNumber(row['Malam'])}</dd>
+          <dt>${t('area')}</dt><dd>${formatNumber(Number(feature.properties.luas_km2) || 0, 2)} km²</dd>
         </dl>
       `);
 
@@ -687,20 +1064,19 @@ function updateDashboard() {
     .sort((a, b) => b[1] - a[1])[0];
 
   if (total > 0) {
-    elements.dominantPeriod.textContent = PERIOD_SHORT[dominantPeriodEntry[0]];
+    elements.dominantPeriod.textContent = displayPeriod(dominantPeriodEntry[0]);
     elements.dominantPeriodDetail.textContent =
-      `${formatNumber(dominantPeriodEntry[1])} sambaran (${formatNumber((dominantPeriodEntry[1] / total) * 100, 1)}%)`;
+      `${strikeText(dominantPeriodEntry[1])} (${formatNumber((dominantPeriodEntry[1] / total) * 100, 1)}%)`;
 
-    elements.topDistrict.textContent = topDistrictEntry[0];
-    elements.topDistrictDetail.textContent =
-      `${formatNumber(topDistrictEntry[1])} sambaran`;
+    elements.topDistrict.textContent = displayDistrictName(topDistrictEntry[0]);
+    elements.topDistrictDetail.textContent = strikeText(topDistrictEntry[1]);
 
     elements.averageCurrent.textContent =
       `${formatNumber(currentCount ? currentSum / currentCount : 0, 2)} kA`;
   } else {
-    elements.dominantPeriod.textContent = 'Tidak ada data';
-    elements.dominantPeriodDetail.textContent = 'Ubah filter untuk menampilkan data';
-    elements.topDistrict.textContent = 'Tidak ada data';
+    elements.dominantPeriod.textContent = t('noData');
+    elements.dominantPeriodDetail.textContent = t('adjustFilter');
+    elements.topDistrict.textContent = t('noData');
     elements.topDistrictDetail.textContent = '–';
     elements.averageCurrent.textContent = '0 kA';
   }
@@ -729,7 +1105,7 @@ const polarityCenterPlugin = {
     ctx.fillText(`${formatNumber(negativePercentage, 0)}%`, centerX, centerY - 5);
     ctx.fillStyle = '#777c8d';
     ctx.font = '700 9px Inter, sans-serif';
-    ctx.fillText('NEGATIF', centerX, centerY + 14);
+    ctx.fillText(t('negativeCaps'), centerX, centerY + 14);
     ctx.restore();
   }
 };
@@ -746,9 +1122,9 @@ function buildCharts() {
   state.periodChart = new Chart(document.getElementById('periodChart'), {
     type: 'bar',
     data: {
-      labels: ['Dini Hari', 'Pagi', 'Siang-Sore', 'Malam'],
+      labels: PERIODS.map(displayPeriod),
       datasets: [{
-        label: 'Jumlah Sambaran',
+        label: t('chartStrikeCount'),
         data: [0, 0, 0, 0],
         backgroundColor: PERIODS.map(period => PERIOD_COLORS[period]),
         borderRadius: 6,
@@ -768,7 +1144,7 @@ function buildCharts() {
           titleFont: { weight: '600' },
           callbacks: {
             label(context) {
-              return `${formatNumber(context.raw)} sambaran`;
+              return strikeText(context.raw);
             }
           }
         }
@@ -799,7 +1175,7 @@ function buildCharts() {
   state.polarityChart = new Chart(document.getElementById('polarityChart'), {
     type: 'doughnut',
     data: {
-      labels: ['Negatif (-)', 'Positif (+)', 'Lainnya'],
+      labels: [t('negativeLabel'), t('positiveLabel'), t('otherLabel')],
       datasets: [{
         data: [0, 0, 0],
         backgroundColor: ['#1647b8', '#d8e2ff', '#a7adba'],
@@ -880,13 +1256,13 @@ function updateDistrictTable() {
     .slice(0, 10);
 
   elements.tableStatus.textContent = rows.length
-    ? `Menampilkan ${rows.length} wilayah teratas • sesuai filter aktif`
-    : 'Tidak ada data yang sesuai dengan filter';
+    ? t('tableStatus', { count: formatNumber(rows.length) })
+    : t('tableEmpty');
 
   if (rows.length === 0) {
     elements.districtTableBody.innerHTML = `
       <tr>
-        <td colspan="7">Tidak ada data yang sesuai dengan filter.</td>
+        <td colspan="7">${t('tableEmpty')}</td>
       </tr>
     `;
     return;
@@ -895,7 +1271,7 @@ function updateDistrictTable() {
   elements.districtTableBody.innerHTML = rows.map((row, index) => `
     <tr>
       <td>${index + 1}</td>
-      <td><strong>${escapeHTML(row.district)}</strong></td>
+      <td><strong>${escapeHTML(displayDistrictName(row.district))}</strong></td>
       <td>${formatNumber(row['Dini Hari'])}</td>
       <td>${formatNumber(row['Pagi'])}</td>
       <td>${formatNumber(row['Siang-Sore'])}</td>
@@ -972,6 +1348,9 @@ function resetFilters() {
 }
 
 async function initialize() {
+  translateStaticContent();
+  updateLanguageControl();
+
   try {
     const [pointsData, districtsData, metadata] = await Promise.all([
       fetchJSON(DATA_PATHS.points),
@@ -988,7 +1367,7 @@ async function initialize() {
     buildCharts();
     bindEvents();
     initializeFilterPanelLayout();
-    applyFilters();
+    setLanguage('id');
 
     state.map.fitBounds(state.provinceBounds, { padding: [20, 20] });
 
@@ -1000,9 +1379,9 @@ async function initialize() {
     console.error(error);
     elements.loadingOverlay.innerHTML = `
       <div>
-        <h2>Data gagal dimuat</h2>
+        <h2>${t('loadFailed')}</h2>
         <p>${escapeHTML(error.message)}</p>
-        <p>Jalankan project melalui local server, bukan dengan membuka index.html langsung.</p>
+        <p>${t('localServerHelp')}</p>
       </div>
     `;
   }
