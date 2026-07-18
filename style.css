@@ -177,6 +177,12 @@ small {
   font-variation-settings: "FILL" 1, "wght" 500, "GRAD" 0, "opsz" 24;
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .desktop-nav {
   display: flex;
   align-items: center;
@@ -210,9 +216,101 @@ small {
   font-size: 1.1rem;
 }
 
-.mobile-signal {
-  display: none;
+.language-picker {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.language-toggle {
+  display: inline-flex;
+  min-width: 74px;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.5rem;
   color: var(--primary);
+  border: 1px solid var(--outline);
+  border-radius: 9px;
+  background: var(--surface);
+  font-size: 0.72rem;
+  font-weight: 700;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.language-toggle:hover,
+.language-toggle.is-open {
+  border-color: #aeb6cc;
+  background: var(--surface-blue);
+}
+
+.language-toggle:focus-visible,
+.language-option:focus-visible {
+  outline: 3px solid rgba(22, 71, 184, 0.18);
+  outline-offset: 2px;
+}
+
+.language-toggle > .material-symbols-outlined:first-child {
+  font-size: 1.15rem;
+}
+
+.language-chevron {
+  color: #727787;
+  font-size: 1rem;
+  transition: transform 0.18s ease;
+}
+
+.language-toggle.is-open .language-chevron {
+  transform: rotate(180deg);
+}
+
+.language-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 1400;
+  width: 205px;
+  padding: 0.35rem;
+  border: 1px solid var(--outline);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(29, 45, 84, 0.12);
+}
+
+.language-menu[hidden] {
+  display: none !important;
+}
+
+.language-option {
+  display: flex;
+  width: 100%;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.65rem;
+  color: #4d5260;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  text-align: left;
+  font-size: 0.74rem;
+}
+
+.language-option:hover {
+  background: var(--surface-soft);
+}
+
+.language-option.is-selected {
+  color: var(--primary);
+  background: var(--surface-blue);
+  font-weight: 700;
+}
+
+.language-option strong {
+  color: inherit;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
 }
 
 main {
@@ -1015,10 +1113,6 @@ footer p {
 
   .desktop-nav {
     display: none;
-  }
-
-  .mobile-signal {
-    display: inline-block;
   }
 
   main {
