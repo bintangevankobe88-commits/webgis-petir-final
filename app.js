@@ -87,8 +87,8 @@ const TRANSLATIONS = {
     rank: 'Peringkat',
     total: 'Total',
     activeFilterStatus: 'Sesuai filter aktif',
-    footerSource: '© 2026 Meteorosystems. Sumber: Lightning Detector Stasiun Geofisika – BMKG.',
-    footerDeveloper: 'Dikembangkan oleh Evan – WebGIS Developer',
+    footerSource: '© 2026 Meteorosystems. Sumber: Lightning Detector Stasiun Geofisika - BMKG.',
+    footerDeveloper: 'Dikembangkan oleh Evan - WebGIS Developer',
     quickNavigationAria: 'Navigasi cepat',
     home: 'Beranda',
     filterNav: 'Filter',
@@ -111,7 +111,7 @@ const TRANSLATIONS = {
     area: 'Luas',
     strikeSingular: 'sambaran',
     strikePlural: 'sambaran',
-    dataSummary: '{start} – {end} • {count} data sambaran',
+    dataSummary: '{start} - {end} • {count} data sambaran',
     noData: 'Tidak ada data',
     adjustFilter: 'Ubah filter untuk menampilkan data',
     negativeCaps: 'NEGATIF',
@@ -188,8 +188,8 @@ const TRANSLATIONS = {
     rank: 'Rank',
     total: 'Total',
     activeFilterStatus: 'Based on active filters',
-    footerSource: '© 2026 Meteorosystems. Source: Lightning Detector, Geophysical Station – BMKG.',
-    footerDeveloper: 'Developed by Evan – WebGIS Developer',
+    footerSource: '© 2026 Meteorosystems. Source: Lightning Detector, Geophysical Station - BMKG.',
+    footerDeveloper: 'Developed by Evan - WebGIS Developer',
     quickNavigationAria: 'Quick navigation',
     home: 'Home',
     filterNav: 'Filters',
@@ -212,7 +212,7 @@ const TRANSLATIONS = {
     area: 'Area',
     strikeSingular: 'strike',
     strikePlural: 'strikes',
-    dataSummary: '{start} – {end} • {count} strike records',
+    dataSummary: '{start} - {end} • {count} strike records',
     noData: 'No data',
     adjustFilter: 'Adjust the filters to display data',
     negativeCaps: 'NEGATIVE',
@@ -323,7 +323,7 @@ function formatNumber(value, maximumFractionDigits = 0) {
 }
 
 function formatDateID(value) {
-  if (!value) return '–';
+  if (!value) return '-';
 
   return new Intl.DateTimeFormat(currentLocale(), {
     day: '2-digit',
@@ -429,7 +429,7 @@ function setLanguage(language) {
 }
 
 function escapeHTML(value) {
-  return String(value ?? '–')
+  return String(value ?? '-')
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
@@ -517,9 +517,9 @@ function renderMapLegends() {
     state.districtLegendElement.innerHTML = `
       <strong>${t('strikeLegendTitle')}</strong>
       <div><i style="background:#eef2ff"></i>0</div>
-      <div><i style="background:#dbe7ff"></i>1–5</div>
-      <div><i style="background:#a9c5ff"></i>6–10</div>
-      <div><i style="background:#5e8ee7"></i>11–20</div>
+      <div><i style="background:#dbe7ff"></i>1-5</div>
+      <div><i style="background:#a9c5ff"></i>6-10</div>
+      <div><i style="background:#5e8ee7"></i>11-20</div>
       <div><i style="background:#1647b8"></i>&gt;20</div>
     `;
   }
@@ -1077,7 +1077,7 @@ function updateDashboard() {
     elements.dominantPeriod.textContent = t('noData');
     elements.dominantPeriodDetail.textContent = t('adjustFilter');
     elements.topDistrict.textContent = t('noData');
-    elements.topDistrictDetail.textContent = '–';
+    elements.topDistrictDetail.textContent = '-';
     elements.averageCurrent.textContent = '0 kA';
   }
 }
