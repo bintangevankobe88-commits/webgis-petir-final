@@ -8,7 +8,6 @@ const DATA_PATHS = {
 
 const PERIODS = ['Dini Hari', 'Pagi', 'Siang-Sore', 'Malam'];
 
-/* Palet biru tenang agar peta tetap informatif tanpa terlihat ramai. */
 const PERIOD_COLORS = {
   'Dini Hari': '#86a9f2',
   'Pagi': '#5f87dd',
